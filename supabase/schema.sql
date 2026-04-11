@@ -47,7 +47,7 @@ CREATE TABLE chunks (
   document_id UUID NOT NULL REFERENCES documents(id) ON DELETE CASCADE,
   chatbot_id UUID NOT NULL REFERENCES chatbots(id) ON DELETE CASCADE,
   content TEXT NOT NULL,
-  embedding vector(1536),
+  embedding vector(768),
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -65,7 +65,7 @@ CREATE INDEX ON chunks USING ivfflat (embedding vector_cosine_ops) WITH (lists =
 
 -- Similarity search function
 CREATE OR REPLACE FUNCTION match_chunks(
-  query_embedding vector(1536),
+  query_embedding vector(768),
   match_chatbot_id UUID,
   match_count INT DEFAULT 5
 )
