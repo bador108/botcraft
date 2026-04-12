@@ -133,7 +133,7 @@ export default async function DashboardPage() {
               <p className="text-sm text-gray-500 dark:text-gray-400">5 chatbots, 2000 msgs/month, all AI models</p>
             </div>
             <Link href="/billing">
-              <Button size="sm">Upgrade — $9/mo</Button>
+              <Button size="sm">Upgrade — 250 Kč/měs.</Button>
             </Link>
           </div>
         </Card>
