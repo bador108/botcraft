@@ -169,14 +169,14 @@ export default async function LandingPage() {
         <p className="text-gray-400 mb-12">Start free, upgrade when you need more</p>
         <div className="grid md:grid-cols-3 gap-6 text-left">
           {[
-            { name: 'Free', price: '$0', features: ['1 chatbot', 'Llama 8B only', '100 msgs/month', '1 document', '50 chunks'], cta: 'Get started' },
-            { name: 'Pro', price: '$9', popular: true, features: ['5 chatbots', 'All models', '2000 msgs/month', '20 documents', 'Unlimited chunks'], cta: 'Start Pro' },
-            { name: 'Business', price: '$29', features: ['Unlimited chatbots', 'All models', 'Unlimited msgs', 'Unlimited docs', 'Priority support'], cta: 'Start Business' },
+            { name: 'Free', price: 'Zdarma', features: ['1 chatbot', 'Llama 8B only', '100 msgs/month', '1 document', '50 chunks'], cta: 'Začít zdarma' },
+            { name: 'Pro', price: '250 Kč', popular: true, features: ['5 chatbots', 'All models', '2000 msgs/month', '20 documents', 'Unlimited chunks'], cta: 'Začít Pro' },
+            { name: 'Business', price: '750 Kč', features: ['Unlimited chatbots', 'All models', 'Unlimited msgs', 'Unlimited docs', 'Priority support'], cta: 'Začít Business' },
           ].map(p => (
             <div key={p.name} className={`rounded-2xl p-6 border ${p.popular ? 'border-indigo-500 bg-indigo-950/40' : 'border-gray-700 bg-gray-900'}`}>
               {p.popular && <div className="text-xs font-bold text-indigo-400 mb-2 uppercase tracking-wider">Most Popular</div>}
               <p className="font-bold text-lg">{p.name}</p>
-              <p className="text-3xl font-bold mt-1 mb-4">{p.price}<span className="text-base font-normal text-gray-400">/mo</span></p>
+              <p className="text-3xl font-bold mt-1 mb-4">{p.price}{p.price !== 'Zdarma' && <span className="text-base font-normal text-gray-400">/měs.</span>}</p>
               <ul className="space-y-2 mb-6">
                 {p.features.map(f => (
                   <li key={f} className="flex items-center gap-2 text-sm text-gray-400">

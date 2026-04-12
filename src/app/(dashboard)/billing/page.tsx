@@ -15,14 +15,14 @@ const PLANS = [
   {
     id: 'pro',
     name: 'Pro',
-    price: 9,
+    price: 250,
     features: ['5 chatbots', 'All models (incl. 70B)', '2000 messages/month', '20 documents per bot', 'Unlimited chunks'],
     popular: true,
   },
   {
     id: 'business',
     name: 'Business',
-    price: 29,
+    price: 750,
     features: ['Unlimited chatbots', 'All models', 'Unlimited messages', 'Unlimited documents', 'Priority support'],
   },
 ]
@@ -90,8 +90,8 @@ export default function BillingPage() {
             <div className="mb-4">
               <p className="font-bold text-lg text-gray-900 dark:text-white">{p.name}</p>
               <div className="flex items-baseline gap-1 mt-1">
-                <span className="text-3xl font-bold text-gray-900 dark:text-white">${p.price}</span>
-                <span className="text-gray-400 text-sm">/month</span>
+                <span className="text-3xl font-bold text-gray-900 dark:text-white">{p.price === 0 ? 'Zdarma' : `${p.price} Kč`}</span>
+                {p.price > 0 && <span className="text-gray-400 text-sm">/měs.</span>}
               </div>
             </div>
 
@@ -120,7 +120,7 @@ export default function BillingPage() {
                 onClick={() => subscribe(p.id)}
               >
                 <Zap className="h-4 w-4" />
-                Upgrade to {p.name}
+                Přejít na {p.name}
               </Button>
             )}
           </div>
