@@ -31,7 +31,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <ClerkProvider>
-      <html lang="en" suppressHydrationWarning className={`${spaceGrotesk.variable} ${dmSans.variable}`}>
+      <html lang="en" suppressHydrationWarning className={`dark ${spaceGrotesk.variable} ${dmSans.variable}`}>
         <body className="antialiased">{children}</body>
       </html>
     </ClerkProvider>

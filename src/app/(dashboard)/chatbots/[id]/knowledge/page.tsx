@@ -1,10 +1,8 @@
 import { auth } from '@clerk/nextjs/server'
 import { notFound } from 'next/navigation'
-import Link from 'next/link'
 import { createServiceClient } from '@/lib/supabase'
 import { KnowledgeBase } from '@/components/chatbot/knowledge-base'
-import { Button } from '@/components/ui/button'
-import { Settings, Code } from 'lucide-react'
+import { BotNav } from '@/components/dashboard/bot-nav'
 import type { User, Chatbot, Document } from '@/types'
 
 export default async function KnowledgePage({ params }: { params: { id: string } }) {
@@ -22,24 +20,19 @@ export default async function KnowledgePage({ params }: { params: { id: string }
   const plan = (user as User | null)?.plan ?? 'free'
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <div className="flex items-center gap-3 mb-5">
+        <span className="text-2xl">{(chatbot as Chatbot).avatar}</span>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-            <span>{(chatbot as Chatbot).avatar}</span>
+          <h1 className="font-display font-semibold text-white text-lg tracking-tight">
             {(chatbot as Chatbot).name}
           </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Knowledge Base</p>
-        </div>
-        <div className="flex gap-2">
-          <Link href={`/chatbots/${params.id}`}>
-            <Button variant="secondary" size="sm"><Settings className="h-4 w-4" /><span className="hidden sm:inline"> Settings</span></Button>
-          </Link>
-          <Link href={`/chatbots/${params.id}/embed`}>
-            <Button variant="secondary" size="sm"><Code className="h-4 w-4" /><span className="hidden sm:inline"> Embed</span></Button>
-          </Link>
+          <p className="text-xs text-zinc-600 mt-0.5">Knowledge Base</p>
         </div>
       </div>
+
+      <BotNav botId={params.id} />
+
       <KnowledgeBase
         chatbotId={params.id}
         initialDocuments={(documents ?? []) as Document[]}

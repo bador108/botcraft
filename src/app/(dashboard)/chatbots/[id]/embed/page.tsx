@@ -1,11 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
 import { useParams } from 'next/navigation'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { Settings, BookOpen, Copy, Check, ExternalLink } from 'lucide-react'
+import { BotNav } from '@/components/dashboard/bot-nav'
+import { Copy, Check, ExternalLink } from 'lucide-react'
 
 export default function EmbedPage() {
   const params = useParams()
@@ -13,9 +11,7 @@ export default function EmbedPage() {
   const [copied, setCopied] = useState(false)
   const [appUrl, setAppUrl] = useState('')
 
-  useEffect(() => {
-    setAppUrl(window.location.origin)
-  }, [])
+  useEffect(() => { setAppUrl(window.location.origin) }, [])
 
   const embedScript = `<script src="${appUrl}/widget.js" data-bot-id="${botId}" async></script>`
 
@@ -26,79 +22,114 @@ export default function EmbedPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-2xl">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Embed Chatbot</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Add this script to your website</p>
-        </div>
-        <div className="flex gap-2">
-          <Link href={`/chatbots/${botId}`}>
-            <Button variant="secondary" size="sm"><Settings className="h-4 w-4" /><span className="hidden sm:inline"> Settings</span></Button>
-          </Link>
-          <Link href={`/chatbots/${botId}/knowledge`}>
-            <Button variant="secondary" size="sm"><BookOpen className="h-4 w-4" /><span className="hidden sm:inline"> Knowledge</span></Button>
-          </Link>
-        </div>
+    <div>
+      <div className="mb-5">
+        <h1 className="font-display font-semibold text-white text-lg tracking-tight">Embed</h1>
+        <p className="text-xs text-zinc-600 mt-0.5">Add this script to your website</p>
       </div>
 
-      <Card className="p-6 space-y-4">
-        <h2 className="font-semibold text-gray-900 dark:text-white">Embed Script</h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          Paste this script tag just before the closing <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">&lt;/body&gt;</code> tag of your HTML page.
-        </p>
+      <BotNav botId={botId} />
 
-        <div className="relative">
-          <pre className="bg-gray-950 text-gray-100 rounded-xl p-4 text-sm overflow-x-auto pr-14 font-mono leading-relaxed">
-            {embedScript}
-          </pre>
-          <button
-            onClick={copy}
-            className="absolute top-3 right-3 p-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white transition"
-          >
-            {copied ? <Check className="h-4 w-4 text-emerald-400" /> : <Copy className="h-4 w-4" />}
-          </button>
+      <div className="grid md:grid-cols-2 gap-8 items-start">
+        {/* Left: snippet + instructions */}
+        <div className="space-y-6">
+          {/* Code block */}
+          <div>
+            <p className="text-xs text-zinc-500 uppercase tracking-[0.12em] font-medium mb-3">Embed script</p>
+            <div className="rounded-xl overflow-hidden border border-white/[0.07]">
+              <div className="flex items-center justify-between px-4 py-2 bg-[#0D0D12] border-b border-white/[0.07]">
+                <span className="text-[11px] text-zinc-600 font-mono">index.html</span>
+                <button
+                  onClick={copy}
+                  className="flex items-center gap-1.5 text-[11px] text-zinc-500 hover:text-white transition-colors"
+                >
+                  {copied
+                    ? <><Check className="h-3 w-3 text-emerald-400" /><span className="text-emerald-400">Copied</span></>
+                    : <><Copy className="h-3 w-3" />Copy</>
+                  }
+                </button>
+              </div>
+              <pre className="bg-[#09090D] px-5 py-4 text-[13px] font-mono leading-relaxed overflow-x-auto">
+                <code>
+                  <div className="text-zinc-600">{'<!-- Add before </body> -->'}</div>
+                  <div>
+                    <span className="text-indigo-400">{'<script'}</span>
+                  </div>
+                  <div>
+                    {'  '}<span className="text-lime-400">src</span>
+                    <span className="text-zinc-400">{"=\""}</span>
+                    <span className="text-orange-300">{appUrl}/widget.js</span>
+                    <span className="text-zinc-400">{"\""}</span>
+                  </div>
+                  <div>
+                    {'  '}<span className="text-lime-400">data-bot-id</span>
+                    <span className="text-zinc-400">{"=\""}</span>
+                    <span className="text-orange-300">{botId}</span>
+                    <span className="text-zinc-400">{"\""}</span>
+                  </div>
+                  <div>
+                    {'  '}<span className="text-lime-400">async</span>
+                    <span className="text-indigo-400">{'>'}</span>
+                  </div>
+                  <div><span className="text-indigo-400">{'</script>'}</span></div>
+                </code>
+              </pre>
+            </div>
+          </div>
+
+          {/* Steps */}
+          <div>
+            <p className="text-xs text-zinc-500 uppercase tracking-[0.12em] font-medium mb-3">How to install</p>
+            <div className="space-y-3">
+              {[
+                'Paste the script just before the closing </body> tag',
+                'A chat bubble appears in the bottom-right corner automatically',
+                'Users click to open — powered by your knowledge base',
+                'Set Allowed Domains in Settings to restrict embedding to your sites',
+              ].map((step, i) => (
+                <div key={i} className="flex gap-3 text-sm text-zinc-400">
+                  <span className="font-mono text-xs text-indigo-500 pt-0.5 shrink-0 w-4">{String(i + 1).padStart(2, '0')}</span>
+                  {step}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {appUrl && (
+            <a
+              href={`${appUrl}/widget/${botId}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-white transition-colors"
+            >
+              <ExternalLink className="h-3.5 w-3.5" />
+              Open widget in new tab
+            </a>
+          )}
         </div>
 
-        <Button onClick={copy} variant="secondary" size="sm">
-          {copied ? <><Check className="h-4 w-4" /> Copied!</> : <><Copy className="h-4 w-4" /> Copy Script</>}
-        </Button>
-      </Card>
-
-      <Card className="p-6 space-y-3">
-        <h2 className="font-semibold text-gray-900 dark:text-white">Preview</h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          Open the widget in a new window to test it.
-        </p>
-        <a href={`${appUrl}/widget/${botId}`} target="_blank" rel="noopener noreferrer">
-          <Button variant="secondary" size="sm">
-            <ExternalLink className="h-4 w-4" />
-            Preview Widget
-          </Button>
-        </a>
-      </Card>
-
-      <Card className="p-6 space-y-3">
-        <h2 className="font-semibold text-gray-900 dark:text-white">How it works</h2>
-        <ol className="space-y-3 text-sm text-gray-600 dark:text-gray-400">
-          <li className="flex gap-3">
-            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 text-xs flex items-center justify-center font-bold">1</span>
-            Add the script tag to your website
-          </li>
-          <li className="flex gap-3">
-            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 text-xs flex items-center justify-center font-bold">2</span>
-            A chat bubble appears in the bottom-right corner
-          </li>
-          <li className="flex gap-3">
-            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 text-xs flex items-center justify-center font-bold">3</span>
-            Visitors click to open the chat — powered by your knowledge base
-          </li>
-          <li className="flex gap-3">
-            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 text-xs flex items-center justify-center font-bold">4</span>
-            Set Allowed Domains in settings to restrict where the bot can be embedded
-          </li>
-        </ol>
-      </Card>
+        {/* Right: live preview */}
+        {appUrl && (
+          <div>
+            <p className="text-xs text-zinc-500 uppercase tracking-[0.12em] font-medium mb-3">Live preview</p>
+            <div className="border border-white/[0.07] rounded-xl overflow-hidden bg-[#0D0D12]">
+              <div className="flex items-center gap-1.5 px-4 py-2.5 border-b border-white/[0.07]">
+                <span className="h-2 w-2 rounded-full bg-white/10" />
+                <span className="h-2 w-2 rounded-full bg-white/10" />
+                <span className="h-2 w-2 rounded-full bg-white/10" />
+                <span className="ml-3 text-[11px] text-zinc-600">Widget preview</span>
+              </div>
+              <div className="relative bg-zinc-900/50" style={{ height: '480px' }}>
+                <iframe
+                  src={`${appUrl}/widget/${botId}`}
+                  className="w-full h-full border-0"
+                  title="Widget preview"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
