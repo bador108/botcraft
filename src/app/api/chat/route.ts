@@ -8,6 +8,16 @@ import type { User, ChatMessage } from '@/types'
 
 export const runtime = 'nodejs'
 
+const CORS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+}
+
+export async function OPTIONS() {
+  return new Response(null, { status: 200, headers: CORS })
+}
+
 // Simple in-memory rate limiter (per botId, max 20 req/min)
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
 
@@ -116,9 +126,9 @@ export async function POST(req: Request) {
         .eq('id', botId),
     ]).catch(() => {}) // ignore logging errors
 
-    return result.toTextStreamResponse()
+    return result.toTextStreamResponse({ headers: CORS })
   } catch (err) {
     console.error('Chat API error:', err)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500, headers: CORS })
   }
 }
