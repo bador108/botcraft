@@ -94,7 +94,7 @@ export function WidgetChat({ bot, domain }: { bot: BotConfig; domain?: string })
   const color = bot.theme_color || '#6366f1'
 
   return (
-    <div className="flex flex-col h-screen bg-white font-sans text-sm">
+    <div className="flex flex-col h-dvh bg-white font-sans text-sm">
       {/* Header */}
       <div
         className="flex items-center gap-3 px-4 py-3 shrink-0"
