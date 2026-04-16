@@ -23,7 +23,7 @@ export default async function KnowledgePage({ params }: { params: { id: string }
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
             <span>{(chatbot as Chatbot).avatar}</span>
@@ -33,10 +33,10 @@ export default async function KnowledgePage({ params }: { params: { id: string }
         </div>
         <div className="flex gap-2">
           <Link href={`/chatbots/${params.id}`}>
-            <Button variant="secondary" size="sm"><Settings className="h-4 w-4" /> Settings</Button>
+            <Button variant="secondary" size="sm"><Settings className="h-4 w-4" /><span className="hidden sm:inline"> Settings</span></Button>
           </Link>
           <Link href={`/chatbots/${params.id}/embed`}>
-            <Button variant="secondary" size="sm"><Code className="h-4 w-4" /> Embed</Button>
+            <Button variant="secondary" size="sm"><Code className="h-4 w-4" /><span className="hidden sm:inline"> Embed</span></Button>
           </Link>
         </div>
       </div>

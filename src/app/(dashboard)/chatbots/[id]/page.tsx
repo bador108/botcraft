@@ -22,7 +22,7 @@ export default async function ChatbotSettingsPage({ params }: { params: { id: st
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
             <span>{(chatbot as Chatbot).avatar}</span>
@@ -34,13 +34,13 @@ export default async function ChatbotSettingsPage({ params }: { params: { id: st
           <Link href={`/chatbots/${params.id}/knowledge`}>
             <Button variant="secondary" size="sm">
               <BookOpen className="h-4 w-4" />
-              Knowledge Base
+              <span className="hidden sm:inline">Knowledge Base</span>
             </Button>
           </Link>
           <Link href={`/chatbots/${params.id}/embed`}>
             <Button variant="secondary" size="sm">
               <Code className="h-4 w-4" />
-              Embed
+              <span className="hidden sm:inline">Embed</span>
             </Button>
           </Link>
         </div>

@@ -58,34 +58,34 @@ export default async function ChatbotsPage() {
         <div className="space-y-3">
           {typedBots.map(bot => (
             <Card key={bot.id} className="p-4">
-              <div className="flex items-center gap-4">
-                <span className="text-3xl shrink-0">{bot.avatar}</span>
+              <div className="flex items-center gap-3">
+                <span className="text-2xl md:text-3xl shrink-0">{bot.avatar}</span>
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-0.5">
+                  <div className="flex items-center gap-2 mb-0.5 flex-wrap">
                     <p className="font-semibold text-gray-900 dark:text-white truncate">{bot.name}</p>
                     <Badge variant={bot.is_active ? 'success' : 'default'}>
                       {bot.is_active ? 'Active' : 'Inactive'}
                     </Badge>
                   </div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    {bot.message_count_month} messages · {bot.model}
+                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                    {bot.message_count_month} msg · {bot.model.split('-').slice(0, 2).join(' ')}
                   </p>
                 </div>
-                <div className="flex items-center gap-2 shrink-0">
+                <div className="flex items-center gap-1.5 shrink-0">
                   <Link href={`/chatbots/${bot.id}/knowledge`}>
-                    <Button variant="ghost" size="sm">
+                    <Button variant="ghost" size="sm" title="Knowledge Base">
                       <BookOpen className="h-4 w-4" />
                     </Button>
                   </Link>
                   <Link href={`/chatbots/${bot.id}/embed`}>
-                    <Button variant="ghost" size="sm">
+                    <Button variant="ghost" size="sm" title="Embed">
                       <Code className="h-4 w-4" />
                     </Button>
                   </Link>
                   <Link href={`/chatbots/${bot.id}`}>
                     <Button variant="secondary" size="sm">
                       <Settings className="h-4 w-4" />
-                      Settings
+                      <span className="hidden sm:inline">Settings</span>
                     </Button>
                   </Link>
                 </div>

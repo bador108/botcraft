@@ -75,7 +75,7 @@ export default function BillingPage() {
         </div>
       )}
 
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {PLANS.map(p => (
           <div key={p.id} className={`relative rounded-2xl border-2 p-6 ${
             p.popular

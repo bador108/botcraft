@@ -27,17 +27,17 @@ export default function EmbedPage() {
 
   return (
     <div className="space-y-6 max-w-2xl">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Embed Chatbot</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Add this script to your website</p>
         </div>
         <div className="flex gap-2">
           <Link href={`/chatbots/${botId}`}>
-            <Button variant="secondary" size="sm"><Settings className="h-4 w-4" /> Settings</Button>
+            <Button variant="secondary" size="sm"><Settings className="h-4 w-4" /><span className="hidden sm:inline"> Settings</span></Button>
           </Link>
           <Link href={`/chatbots/${botId}/knowledge`}>
-            <Button variant="secondary" size="sm"><BookOpen className="h-4 w-4" /> Knowledge</Button>
+            <Button variant="secondary" size="sm"><BookOpen className="h-4 w-4" /><span className="hidden sm:inline"> Knowledge</span></Button>
           </Link>
         </div>
       </div>

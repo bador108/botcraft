@@ -135,7 +135,7 @@ export function KnowledgeBase({ chatbotId, initialDocuments, plan }: KnowledgeBa
         {tab === 'upload' ? (
           <div
             {...getRootProps()}
-            className={`border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition ${
+            className={`border-2 border-dashed rounded-xl p-6 md:p-10 text-center cursor-pointer transition ${
               isDragActive ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/10' :
               !canUpload ? 'border-gray-200 opacity-50 cursor-not-allowed' :
               'border-gray-200 dark:border-gray-700 hover:border-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-800/50'
