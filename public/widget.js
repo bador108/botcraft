@@ -70,16 +70,31 @@
     }
   });
 
-  // Mobile: full screen iframe
+  // Mobile: full width bottom sheet
   function applyMobile() {
     if (window.innerWidth < 480) {
-      iframe.style.width = 'calc(100vw - 24px)';
-      iframe.style.height = 'calc(100vh - 90px)';
+      container.style.bottom = '0';
+      container.style.right = '0';
+      container.style.left = '0';
+      container.style.alignItems = 'flex-end';
+      iframe.style.width = '100%';
+      iframe.style.height = (window.innerHeight - 76) + 'px';
       iframe.style.maxHeight = 'none';
+      iframe.style.borderRadius = '16px 16px 0 0';
+      iframe.style.marginBottom = '0';
+      btn.style.marginRight = '16px';
+      btn.style.marginBottom = '12px';
     } else {
+      container.style.bottom = '20px';
+      container.style.right = '20px';
+      container.style.left = '';
       iframe.style.width = '380px';
       iframe.style.height = '600px';
       iframe.style.maxHeight = '80vh';
+      iframe.style.borderRadius = '16px';
+      iframe.style.marginBottom = '12px';
+      btn.style.marginRight = '';
+      btn.style.marginBottom = '';
     }
   }
 
