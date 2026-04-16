@@ -18,11 +18,12 @@
   var iframe = document.createElement('iframe');
   iframe.src = appUrl + '/widget/' + botId + '?domain=' + encodeURIComponent(domain);
   iframe.allow = 'microphone';
+  var isMobileInit = window.innerWidth < 480;
   iframe.style.cssText =
     'display:none;width:380px;height:600px;max-height:80vh;border:none;border-radius:16px;' +
     'box-shadow:0 20px 60px rgba(0,0,0,0.15),0 0 0 1px rgba(0,0,0,0.05);' +
-    'margin-bottom:12px;background:#fff;' +
-    'transition:opacity 0.2s ease,transform 0.2s ease;opacity:0;transform:translateY(8px) scale(0.98);';
+    'margin-bottom:12px;background:#fff;transition:opacity 0.2s ease;opacity:0;' +
+    (isMobileInit ? '' : 'transform:translateY(8px) scale(0.98);transition:opacity 0.2s ease,transform 0.2s ease;');
 
   // Toggle button
   var btn = document.createElement('button');
@@ -48,16 +49,20 @@
 
   btn.addEventListener('click', function () {
     isOpen = !isOpen;
+    var mobile = window.innerWidth < 480;
     if (isOpen) {
       iframe.style.display = 'block';
       requestAnimationFrame(function () {
         iframe.style.opacity = '1';
-        iframe.style.transform = 'translateY(0) scale(1)';
+        // On mobile: no transform — transform on iframe blocks iOS keyboard focus
+        iframe.style.transform = mobile ? 'none' : 'translateY(0) scale(1)';
+        iframe.style.webkitTransform = mobile ? 'none' : 'translateY(0) scale(1)';
       });
       btn.innerHTML = closeSvg;
     } else {
       iframe.style.opacity = '0';
-      iframe.style.transform = 'translateY(8px) scale(0.98)';
+      iframe.style.transform = mobile ? 'none' : 'translateY(8px) scale(0.98)';
+      iframe.style.webkitTransform = mobile ? 'none' : 'translateY(8px) scale(0.98)';
       setTimeout(function () { iframe.style.display = 'none'; }, 200);
       btn.innerHTML = chatSvg;
     }
