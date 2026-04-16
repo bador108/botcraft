@@ -2,10 +2,8 @@ import { auth } from '@clerk/nextjs/server'
 import Link from 'next/link'
 import { createServiceClient } from '@/lib/supabase'
 import { PLAN_LIMITS } from '@/lib/plans'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Bot, MessageSquare, FileText, Plus, ArrowRight } from 'lucide-react'
+import { Bot, Plus, ArrowRight, MessageSquare, TrendingUp } from 'lucide-react'
 import type { User, Chatbot } from '@/types'
 
 export default async function DashboardPage() {
@@ -24,120 +22,123 @@ export default async function DashboardPage() {
   const totalMessages = typedBots.reduce((sum, b) => sum + b.message_count_month, 0)
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <div className="space-y-10">
+
+      {/* Header */}
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            Your AI chatbots at a glance
+          <h1 className="font-display text-xl font-semibold text-white tracking-tight">Dashboard</h1>
+          <p className="text-sm text-zinc-600 mt-0.5">
+            {plan.charAt(0).toUpperCase() + plan.slice(1)} plan
           </p>
         </div>
         <Link href="/chatbots/new">
           <Button size="sm">
-            <Plus className="h-4 w-4" />
-            New Chatbot
+            <Plus className="h-3.5 w-3.5" />
+            New chatbot
           </Button>
         </Link>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="p-5">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 flex items-center justify-center">
-              <Bot className="h-5 w-5 text-indigo-600" />
+      {/* Stats — inline, minimal */}
+      <div className="flex flex-wrap gap-8 py-5 border-y border-white/[0.06]">
+        <div>
+          <p className="text-2xl font-bold text-white font-display">
+            {typedBots.length}
+            {limits.chatbots !== Infinity && (
+              <span className="text-sm font-normal text-zinc-600"> / {limits.chatbots}</span>
+            )}
+          </p>
+          <p className="text-xs text-zinc-600 mt-0.5 flex items-center gap-1.5">
+            <Bot className="h-3 w-3" />
+            Chatbots
+          </p>
+        </div>
+        <div className="w-px bg-white/[0.06] hidden sm:block" />
+        <div>
+          <p className="text-2xl font-bold text-white font-display">
+            {totalMessages}
+            {limits.messages_per_month !== Infinity && (
+              <span className="text-sm font-normal text-zinc-600"> / {limits.messages_per_month}</span>
+            )}
+          </p>
+          <p className="text-xs text-zinc-600 mt-0.5 flex items-center gap-1.5">
+            <MessageSquare className="h-3 w-3" />
+            Messages this month
+          </p>
+        </div>
+        {plan !== 'business' && (
+          <>
+            <div className="w-px bg-white/[0.06] hidden sm:block" />
+            <div className="flex items-center gap-3">
+              <div>
+                <p className="text-sm font-semibold text-indigo-400">
+                  {plan === 'free' ? 'Pro — 250 Kč/měs.' : 'Business — 750 Kč/měs.'}
+                </p>
+                <p className="text-xs text-zinc-600 mt-0.5 flex items-center gap-1.5">
+                  <TrendingUp className="h-3 w-3" />
+                  {plan === 'free' ? '5 chatbots, all models' : 'Unlimited everything'}
+                </p>
+              </div>
+              <Link href="/billing">
+                <Button size="sm" variant="secondary">Upgrade</Button>
+              </Link>
             </div>
-            <div>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">{typedBots.length}</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
-                Chatbots{limits.chatbots !== Infinity ? ` / ${limits.chatbots}` : ''}
-              </p>
-            </div>
-          </div>
-        </Card>
-
-        <Card className="p-5">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center">
-              <MessageSquare className="h-5 w-5 text-emerald-600" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">{totalMessages}</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
-                Messages this month{limits.messages_per_month !== Infinity ? ` / ${limits.messages_per_month}` : ''}
-              </p>
-            </div>
-          </div>
-        </Card>
-
-        <Card className="p-5">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-lg bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center">
-              <FileText className="h-5 w-5 text-purple-600" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white capitalize">{plan}</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Current plan</p>
-            </div>
-          </div>
-        </Card>
+          </>
+        )}
       </div>
 
       {/* Chatbot list */}
       <div>
-        <h2 className="text-base font-semibold text-gray-900 dark:text-white mb-4">Your Chatbots</h2>
+        <div className="flex items-center justify-between mb-4">
+          <p className="text-xs text-zinc-600 uppercase tracking-[0.12em] font-medium">Your chatbots</p>
+          {typedBots.length > 0 && (
+            <Link href="/chatbots/new" className="text-xs text-zinc-600 hover:text-white transition-colors flex items-center gap-1">
+              <Plus className="h-3 w-3" /> New
+            </Link>
+          )}
+        </div>
+
         {typedBots.length === 0 ? (
-          <Card className="p-10 text-center">
-            <Bot className="h-10 w-10 text-gray-300 mx-auto mb-3" />
-            <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">No chatbots yet</p>
+          <div className="border border-white/[0.06] rounded-xl px-6 py-12 text-center">
+            <Bot className="h-8 w-8 text-zinc-800 mx-auto mb-3" />
+            <p className="text-sm text-zinc-500 mb-1">No chatbots yet</p>
+            <p className="text-xs text-zinc-700 mb-5">Create one in under 2 minutes</p>
             <Link href="/chatbots/new">
               <Button>
-                <Plus className="h-4 w-4" />
+                <Plus className="h-3.5 w-3.5" />
                 Create your first chatbot
               </Button>
             </Link>
-          </Card>
+          </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {typedBots.map(bot => (
-              <Card key={bot.id} className="p-5 hover:shadow-md transition-shadow">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl">{bot.avatar}</span>
-                    <div>
-                      <p className="font-semibold text-gray-900 dark:text-white text-sm">{bot.name}</p>
-                      <p className="text-xs text-gray-500">{bot.message_count_month} msgs/mo</p>
-                    </div>
-                  </div>
-                  <Badge variant={bot.is_active ? 'success' : 'default'}>
-                    {bot.is_active ? 'Active' : 'Inactive'}
-                  </Badge>
+          <div className="border border-white/[0.06] rounded-xl overflow-hidden divide-y divide-white/[0.04]">
+            {typedBots.map((bot) => (
+              <Link
+                key={bot.id}
+                href={`/chatbots/${bot.id}`}
+                className="flex items-center gap-4 px-5 py-4 hover:bg-white/[0.02] transition-colors group"
+              >
+                <span className="text-xl shrink-0">{bot.avatar}</span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-white">{bot.name}</p>
+                  <p className="text-xs text-zinc-600 mt-0.5">{bot.message_count_month} msgs this month</p>
                 </div>
-                <Link href={`/chatbots/${bot.id}`}>
-                  <Button variant="secondary" size="sm" className="w-full">
-                    Manage <ArrowRight className="h-3.5 w-3.5" />
-                  </Button>
-                </Link>
-              </Card>
+                <div className="flex items-center gap-3 shrink-0">
+                  <span className={`text-[11px] px-2 py-0.5 rounded-full border font-medium ${
+                    bot.is_active
+                      ? 'bg-emerald-950/40 text-emerald-400 border-emerald-900/50'
+                      : 'bg-zinc-900 text-zinc-500 border-zinc-800'
+                  }`}>
+                    {bot.is_active ? 'Active' : 'Inactive'}
+                  </span>
+                  <ArrowRight className="h-3.5 w-3.5 text-zinc-700 group-hover:text-zinc-400 transition-colors" />
+                </div>
+              </Link>
             ))}
           </div>
         )}
       </div>
-
-      {/* Upgrade banner for free users */}
-      {plan === 'free' && (
-        <Card className="p-5 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950/40 dark:to-purple-950/40 border-indigo-200 dark:border-indigo-800">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-semibold text-gray-900 dark:text-white">Upgrade to Pro</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">5 chatbots, 2000 msgs/month, all AI models</p>
-            </div>
-            <Link href="/billing">
-              <Button size="sm">Upgrade — 250 Kč/měs.</Button>
-            </Link>
-          </div>
-        </Card>
-      )}
     </div>
   )
 }

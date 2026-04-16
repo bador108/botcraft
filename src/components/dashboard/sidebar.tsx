@@ -2,21 +2,22 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { UserButton } from '@clerk/nextjs'
-import { LayoutDashboard, Bot, CreditCard, Zap, Menu, X } from 'lucide-react'
+import { LayoutDashboard, Bot, CreditCard, Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const nav = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/chatbots', label: 'Chatbots', icon: Bot },
-  { href: '/billing', label: 'Billing', icon: CreditCard },
+  { href: '/chatbots',  label: 'Chatbots',  icon: Bot },
+  { href: '/billing',   label: 'Billing',   icon: CreditCard },
 ]
 
 function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
   const path = usePathname()
   return (
-    <nav className="flex-1 px-3 py-4 space-y-1">
+    <nav className="flex-1 px-3 py-4 space-y-0.5">
       {nav.map(({ href, label, icon: Icon }) => {
         const active = path === href || (href !== '/dashboard' && path.startsWith(href))
         return (
@@ -25,11 +26,13 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
             href={href}
             onClick={onNavigate}
             className={cn(
-              'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
-              active ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:text-white hover:bg-gray-800'
+              'flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors',
+              active
+                ? 'bg-white/[0.06] text-white font-medium'
+                : 'text-zinc-500 hover:text-zinc-200 hover:bg-white/[0.04] font-normal'
             )}
           >
-            <Icon className="h-4 w-4 shrink-0" />
+            <Icon className={cn('h-4 w-4 shrink-0', active ? 'text-white' : 'text-zinc-600')} />
             {label}
           </Link>
         )
@@ -38,12 +41,21 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
   )
 }
 
+function Logo() {
+  return (
+    <div className="flex items-center gap-2.5 px-5 h-14 border-b border-white/[0.06]">
+      <Image src="/icon.svg" alt="BotCraft" width={22} height={22} className="rounded-md" />
+      <span className="font-semibold text-white text-sm tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>BotCraft</span>
+    </div>
+  )
+}
+
 function UserSection() {
   return (
-    <div className="px-4 py-4 border-t border-gray-800">
-      <div className="flex items-center gap-3">
+    <div className="px-4 py-4 border-t border-white/[0.06]">
+      <div className="flex items-center gap-2.5">
         <UserButton />
-        <span className="text-xs text-gray-400 truncate">Account</span>
+        <span className="text-xs text-zinc-600 truncate">Account</span>
       </div>
     </div>
   )
@@ -54,29 +66,22 @@ export function Sidebar() {
 
   return (
     <>
-      {/* Desktop sidebar */}
-      <aside className="w-60 shrink-0 hidden md:flex flex-col h-screen bg-gray-900 border-r border-gray-800 sticky top-0">
-        <div className="flex items-center gap-2.5 px-5 h-16 border-b border-gray-800">
-          <div className="h-8 w-8 rounded-lg bg-indigo-600 flex items-center justify-center shrink-0">
-            <Zap className="h-4 w-4 text-white" />
-          </div>
-          <span className="font-bold text-white text-lg tracking-tight">BotCraft</span>
-        </div>
+      {/* Desktop */}
+      <aside className="w-52 shrink-0 hidden md:flex flex-col h-screen bg-[#0C0C10] border-r border-white/[0.06] sticky top-0">
+        <Logo />
         <NavLinks />
         <UserSection />
       </aside>
 
       {/* Mobile top bar */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-40 h-14 bg-gray-900 border-b border-gray-800 flex items-center justify-between px-4">
-        <div className="flex items-center gap-2.5">
-          <div className="h-7 w-7 rounded-lg bg-indigo-600 flex items-center justify-center shrink-0">
-            <Zap className="h-3.5 w-3.5 text-white" />
-          </div>
-          <span className="font-bold text-white tracking-tight">BotCraft</span>
+      <div className="md:hidden fixed top-0 left-0 right-0 z-40 h-14 bg-[#0C0C10] border-b border-white/[0.06] flex items-center justify-between px-4">
+        <div className="flex items-center gap-2">
+          <Image src="/icon.svg" alt="BotCraft" width={22} height={22} className="rounded-md" />
+          <span className="font-semibold text-white text-sm" style={{ fontFamily: 'var(--font-display)' }}>BotCraft</span>
         </div>
         <button
           onClick={() => setOpen(true)}
-          className="h-10 w-10 flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 active:bg-gray-700 transition"
+          className="h-9 w-9 flex items-center justify-center rounded-lg text-zinc-500 hover:text-white hover:bg-white/[0.06] transition-colors"
         >
           <Menu className="h-5 w-5" />
         </button>
@@ -85,17 +90,15 @@ export function Sidebar() {
       {/* Mobile drawer */}
       {open && (
         <div className="md:hidden fixed inset-0 z-50 flex">
-          <div className="absolute inset-0 bg-black/50" onClick={() => setOpen(false)} />
-          <aside className="relative w-72 bg-gray-900 flex flex-col h-full shadow-2xl">
-            <div className="flex items-center justify-between px-5 h-14 border-b border-gray-800">
-              <div className="flex items-center gap-2.5">
-                <div className="h-7 w-7 rounded-lg bg-indigo-600 flex items-center justify-center shrink-0">
-                  <Zap className="h-3.5 w-3.5 text-white" />
-                </div>
-                <span className="font-bold text-white tracking-tight">BotCraft</span>
+          <div className="absolute inset-0 bg-black/60" onClick={() => setOpen(false)} />
+          <aside className="relative w-64 bg-[#0C0C10] flex flex-col h-full shadow-2xl border-r border-white/[0.06]">
+            <div className="flex items-center justify-between px-5 h-14 border-b border-white/[0.06]">
+              <div className="flex items-center gap-2">
+                <Image src="/icon.svg" alt="BotCraft" width={22} height={22} className="rounded-md" />
+                <span className="font-semibold text-white text-sm" style={{ fontFamily: 'var(--font-display)' }}>BotCraft</span>
               </div>
-              <button onClick={() => setOpen(false)} className="text-gray-400 hover:text-white">
-                <X className="h-5 w-5" />
+              <button onClick={() => setOpen(false)} className="text-zinc-500 hover:text-white transition-colors">
+                <X className="h-4 w-4" />
               </button>
             </div>
             <NavLinks onNavigate={() => setOpen(false)} />
