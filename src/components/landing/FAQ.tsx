@@ -6,11 +6,11 @@ import { Plus } from 'lucide-react'
 const items = [
   {
     q: 'Jak rychle to postavím?',
-    a: 'Od uploadu dokumentu po funkční chat na webu: 3-5 minut.',
+    a: 'Od uploadu dokumentu po funkční chat na webu: 3–5 minut.',
   },
   {
     q: 'Co se stane, když překročím limit zpráv?',
-    a: 'Chatbot odpoví koncovým uživatelům zprávou "Vrátím se 1. dne příštího měsíce" a tobě pošleme email. Žádné auto-billing, žádné překvapení.',
+    a: 'Chatbot odpoví návštěvníkům zprávou, že se vrátí 1. dne příštího měsíce, a tobě pošleme email. Žádné auto-billing, žádné překvapení.',
   },
   {
     q: 'Můžu exportovat data?',
@@ -26,7 +26,7 @@ const items = [
   },
   {
     q: 'Proč jsou odpovědi tak rychlé?',
-    a: 'Používáme specializovanou infrastrukturu optimalizovanou pro chat v reálném čase. Odpovědi přichází typicky do 1 vteřiny, zatímco běžná AI řešení trvají 5–10 vteřin. Pro návštěvníky tvého webu to znamená plynulou konverzaci bez čekání.',
+    a: 'Používáme specializovanou infrastrukturu optimalizovanou pro chat v reálném čase. Odpovědi přichází typicky do 1 vteřiny — plynulá konverzace bez čekání.',
   },
 ]
 
@@ -51,17 +51,19 @@ export function FAQ() {
                 value={`item-${i}`}
                 className="border-b border-paper_border"
               >
-                <Accordion.Trigger className="w-full flex items-center justify-between py-4 text-left group">
-                  <span className="font-mono text-sm font-medium text-ink uppercase tracking-wide">
+                <Accordion.Trigger className="w-full flex items-center justify-between py-5 text-left group cursor-pointer">
+                  <span className="text-sm font-medium text-ink pr-4">
                     {item.q}
                   </span>
                   <Plus
                     size={16}
-                    className="text-muted shrink-0 ml-4 transition-transform duration-200 group-data-[state=open]:rotate-45"
+                    className="text-muted shrink-0 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-data-[state=open]:rotate-45 group-data-[state=open]:text-rust"
                   />
                 </Accordion.Trigger>
-                <Accordion.Content className="overflow-hidden data-[state=open]:animate-[slideDown_200ms_ease] data-[state=closed]:animate-[slideUp_200ms_ease]">
-                  <p className="text-sm text-muted leading-relaxed pb-4 max-w-lg">
+                <Accordion.Content
+                  className="overflow-hidden data-[state=open]:animate-[slideDown_300ms_cubic-bezier(0.16,1,0.3,1)] data-[state=closed]:animate-[slideUp_200ms_ease]"
+                >
+                  <p className="text-sm text-muted leading-relaxed pb-5 max-w-lg">
                     {item.a}
                   </p>
                 </Accordion.Content>
