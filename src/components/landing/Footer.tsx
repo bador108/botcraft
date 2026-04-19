@@ -1,5 +1,5 @@
-import Image from 'next/image'
 import Link from 'next/link'
+import { Logo } from '@/components/Logo'
 
 const columns = [
   {
@@ -63,10 +63,7 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div className="border-t border-paper_border pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <Image src="/icon.svg" alt="BotCraft" width={16} height={16} />
-            <span className="font-mono text-[11px] text-muted uppercase tracking-wider">BotCraft</span>
-          </div>
+          <Logo linkTo="/" variant="icon" size={16} />
           <p className="font-mono text-[11px] text-muted">
             © {new Date().getFullYear()} BotCraft · Postaveno pro tvůrce
           </p>

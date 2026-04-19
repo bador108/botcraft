@@ -2,12 +2,12 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { UserButton, useUser } from '@clerk/nextjs'
 import { LayoutDashboard, Bot, CreditCard, FileText, BarChart2, Settings, ExternalLink, Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { clerkAppearance } from '@/lib/clerk-theme'
+import { Logo } from '@/components/Logo'
 
 const nav = [
   { href: '/dashboard',  label: 'Dashboard',  icon: LayoutDashboard },
@@ -63,10 +63,7 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
 function SidebarLogo() {
   return (
     <div className="px-5 py-5 border-b border-paper_border">
-      <Link href="/" className="flex items-center gap-2.5 hover:opacity-70 transition-opacity">
-        <Image src="/icon.svg" alt="BotCraft" width={22} height={22} />
-        <span className="font-semibold text-base text-ink tracking-tight">BotCraft</span>
-      </Link>
+      <Logo linkTo="/" className="hover:opacity-70 transition-opacity" />
     </div>
   )
 }
@@ -104,10 +101,7 @@ export function Sidebar() {
 
       {/* Mobile top bar */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-40 h-14 bg-white border-b border-paper_border shadow-sm flex items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-2">
-          <Image src="/icon.svg" alt="BotCraft" width={20} height={20} />
-          <span className="font-semibold text-sm text-ink">BotCraft</span>
-        </Link>
+        <Logo linkTo="/" />
         <button
           onClick={() => setOpen(true)}
           className="h-9 w-9 flex items-center justify-center rounded-lg text-muted hover:text-ink hover:bg-bone transition-colors"
@@ -122,10 +116,7 @@ export function Sidebar() {
           <div className="absolute inset-0 bg-ink/30 backdrop-blur-sm" onClick={() => setOpen(false)} />
           <aside className="relative w-[80vw] max-w-[15rem] bg-white flex flex-col h-full border-r border-paper_border shadow-xl">
             <div className="flex items-center justify-between px-5 py-4 border-b border-paper_border">
-              <Link href="/" className="flex items-center gap-2">
-                <Image src="/icon.svg" alt="BotCraft" width={20} height={20} />
-                <span className="font-semibold text-sm text-ink">BotCraft</span>
-              </Link>
+              <Logo linkTo="/" />
               <button onClick={() => setOpen(false)} className="text-muted hover:text-ink transition-colors rounded-lg p-1 hover:bg-bone">
                 <X className="h-4 w-4" />
               </button>

@@ -1,9 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
-  <rect x="0" y="0" width="64" height="64" fill="#1A1814"/>
-  <!-- Chat bubble -->
-  <rect x="10" y="14" width="44" height="32" stroke="#F5F1EA" stroke-width="2.5" fill="none"/>
-  <path d="M 16 46 L 16 56 L 26 46" stroke="#F5F1EA" stroke-width="2.5" fill="none" stroke-linejoin="miter"/>
-  <!-- Rust block + blinking cursor -->
-  <rect x="22" y="25" width="11" height="11" fill="#D4502A"/>
-  <rect x="37" y="25" width="2" height="11" fill="#F5F1EA"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Chat bubble outline -->
+  <rect x="1" y="3" width="26" height="20" stroke="#1A1814" stroke-width="2"/>
+  <!-- Tail -->
+  <path d="M5 23 L5 30 L12 23" stroke="#1A1814" stroke-width="2" stroke-linejoin="miter" fill="none"/>
+  <!-- Rust block -->
+  <rect x="7" y="10" width="7" height="7" fill="#D4502A"/>
+  <!-- Cursor -->
+  <rect x="17" y="10" width="2" height="7" fill="#1A1814"/>
 </svg>

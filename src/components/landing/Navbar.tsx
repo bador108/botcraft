@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
+import { Logo } from '@/components/Logo'
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -21,10 +21,7 @@ export function Navbar() {
     >
       <div className="max-w-[1240px] mx-auto px-5 md:px-8 h-14 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 opacity-100 hover:opacity-70 transition-opacity">
-          <Image src="/icon.svg" alt="BotCraft" width={22} height={22} />
-          <span className="font-mono text-sm font-semibold text-ink tracking-tight">BotCraft</span>
-        </Link>
+        <Logo linkTo="/" className="hover:opacity-70 transition-opacity" />
 
         {/* Nav links — center */}
         <div className="hidden md:flex items-center gap-8">
@@ -54,8 +51,7 @@ export function Navbar() {
           </Link>
           <Link
             href="/sign-up"
-            className="text-sm bg-rust text-bone px-4 py-1.5 font-mono font-medium hover:bg-rust_hover transition-colors"
-            style={{ borderRadius: '2px' }}
+            className="text-sm bg-rust text-bone px-4 py-1.5 font-medium rounded-lg hover:bg-rust_hover transition-colors"
           >
             Zkusit zdarma
           </Link>
