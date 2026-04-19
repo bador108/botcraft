@@ -20,10 +20,6 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'BotCraft — AI Chatbot Builder',
   description: 'Postav AI chatbota se znalostní bází za pár minut. Jeden řádek kódu pro embed na libovolný web.',
-  icons: {
-    icon: '/icon.svg',
-    apple: '/icon.svg',
-  },
   openGraph: {
     title: 'BotCraft — AI Chatbot Builder',
     description: 'Postav AI chatbota se znalostní bází za pár minut. Jeden řádek kódu pro embed na libovolný web.',
