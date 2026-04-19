@@ -91,7 +91,7 @@ export default function BillingPage() {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="font-mono text-2xl font-medium text-ink uppercase tracking-tight">Fakturace</h1>
+        <h1 className="text-2xl font-bold text-ink tracking-tight">Fakturace</h1>
         <p className="font-mono text-[11px] text-muted uppercase tracking-wider mt-1">
           Aktuální plán: {PLANS.find(p => p.id === plan)?.displayName ?? plan}
         </p>

@@ -32,7 +32,7 @@ export default async function ChatbotSettingsPage({ params }: { params: { id: st
       <div className="flex items-center gap-3">
         <span className="text-2xl">{bot.avatar}</span>
         <div>
-          <h1 className="font-mono text-2xl font-medium text-ink uppercase tracking-tight">{bot.name}</h1>
+          <h1 className="text-2xl font-bold text-ink tracking-tight">{bot.name}</h1>
           <p className="font-mono text-[11px] text-muted uppercase tracking-wider mt-0.5">Nastavení</p>
         </div>
       </div>

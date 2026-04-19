@@ -4,15 +4,15 @@ export default function AnalyticsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="font-mono text-2xl font-medium text-ink uppercase tracking-tight">Analytika</h1>
-        <p className="font-mono text-[11px] text-muted uppercase tracking-wider mt-1">
-          Výkon a statistiky chatbotů
-        </p>
+        <h1 className="text-2xl font-bold text-ink tracking-tight">Analytika</h1>
+        <p className="text-sm text-muted mt-0.5">Výkon a statistiky chatbotů</p>
       </div>
 
-      <div className="border border-paper_border border-dashed px-6 py-14 text-center" style={{ borderRadius: '2px' }}>
-        <BarChart2 className="h-8 w-8 text-muted mx-auto mb-3" />
-        <p className="font-mono text-sm text-ink uppercase tracking-wide mb-1">Brzy k dispozici</p>
+      <div className="bg-white rounded-xl border border-paper_border border-dashed shadow-sm px-6 py-14 text-center">
+        <div className="h-12 w-12 bg-bone rounded-xl flex items-center justify-center mx-auto mb-4">
+          <BarChart2 className="h-6 w-6 text-muted" />
+        </div>
+        <p className="font-semibold text-ink mb-1">Brzy k dispozici</p>
         <p className="text-sm text-muted max-w-xs mx-auto">
           Graf zpráv, top dotazy, konverzní metriky. Dostupné od plánu Maker.
         </p>

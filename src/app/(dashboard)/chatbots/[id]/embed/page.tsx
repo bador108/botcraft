@@ -24,7 +24,7 @@ export default function EmbedPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-mono text-2xl font-medium text-ink uppercase tracking-tight">Embed</h1>
+        <h1 className="text-2xl font-bold text-ink tracking-tight">Embed</h1>
         <p className="font-mono text-[11px] text-muted uppercase tracking-wider mt-1">Vložit chatbota na web</p>
       </div>
 

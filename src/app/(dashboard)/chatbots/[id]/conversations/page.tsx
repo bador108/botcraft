@@ -52,7 +52,7 @@ export default async function ConversationsPage({ params }: { params: { id: stri
       <div className="flex items-center gap-3">
         <span className="text-2xl">{(chatbot as Chatbot).avatar}</span>
         <div>
-          <h1 className="font-mono text-2xl font-medium text-ink uppercase tracking-tight">
+          <h1 className="text-2xl font-bold text-ink tracking-tight">
             {(chatbot as Chatbot).name}
           </h1>
           <p className="font-mono text-[11px] text-muted uppercase tracking-wider mt-0.5">Konverzace</p>
