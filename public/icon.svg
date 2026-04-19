@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <!-- Chat bubble outline -->
-  <rect x="1" y="3" width="26" height="20" stroke="#1A1814" stroke-width="2"/>
+  <!-- Chat bubble — filled for clarity at small sizes -->
+  <rect x="1" y="2" width="26" height="20" rx="2" fill="#1A1814"/>
   <!-- Tail -->
-  <path d="M5 23 L5 30 L12 23" stroke="#1A1814" stroke-width="2" stroke-linejoin="miter" fill="none"/>
+  <polygon points="4,22 4,30 12,22" fill="#1A1814"/>
   <!-- Rust block -->
-  <rect x="7" y="10" width="7" height="7" fill="#D4502A"/>
-  <!-- Cursor -->
-  <rect x="17" y="10" width="2" height="7" fill="#1A1814"/>
+  <rect x="6" y="9" width="8" height="8" fill="#D4502A"/>
+  <!-- Cursor line -->
+  <rect x="17" y="9" width="3" height="8" fill="#F5F1EA"/>
 </svg>
