@@ -11,12 +11,11 @@ export function FinalCTA() {
           Postav si prvního chatbota dneska
         </h2>
         <p className="text-muted text-base mb-8">
-          50 zpráv zdarma. Žádná karta. Kdykoli zrušíš.
+          50 zpráv zdarma · Žádná karta · Kdykoli zrušíš
         </p>
         <Link
           href="/sign-up"
-          className="inline-block bg-rust text-bone px-8 py-3 font-mono text-base font-medium hover:bg-rust_hover transition-colors"
-          style={{ borderRadius: '2px' }}
+          className="inline-flex items-center gap-2 bg-rust text-bone px-8 py-3 font-medium text-base rounded-lg hover:bg-rust_hover transition-colors shadow-sm"
         >
           Začít zdarma →
         </Link>
