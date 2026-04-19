@@ -9,6 +9,8 @@ interface BotConfig {
   avatar: string
   theme_color: string
   welcome_message: string
+  // TODO: přidat show_badge do public chatbot API (false pro Maker+ plány)
+  show_badge?: boolean
 }
 
 interface Message {
@@ -25,10 +27,10 @@ export function WidgetChat({ bot, domain }: { bot: BotConfig; domain?: string })
   const bottomRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  // Send theme color to parent for button color
+  // Pošli barvu tématu rodiči pro chat bubble tlačítko
   useEffect(() => {
-    window.parent.postMessage({ type: 'botcraft-theme', color: bot.theme_color }, '*')
-  }, [bot.theme_color])
+    window.parent.postMessage({ type: 'botcraft-theme', color: '#D4502A' }, '*')
+  }, [])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -43,7 +45,7 @@ export function WidgetChat({ bot, domain }: { bot: BotConfig; domain?: string })
     setInput('')
     setLoading(true)
 
-    // Add placeholder assistant message
+    // Přidej placeholder odpovědi
     setMessages(prev => [...prev, { role: 'assistant', content: '' }])
 
     try {
@@ -61,12 +63,12 @@ export function WidgetChat({ bot, domain }: { bot: BotConfig; domain?: string })
         const err = await res.json().catch(() => ({}))
         setMessages(prev => [
           ...prev.slice(0, -1),
-          { role: 'assistant', content: err.error ?? 'Something went wrong. Please try again.' },
+          { role: 'assistant', content: err.reply ?? err.error ?? 'Něco se pokazilo. Zkus to znovu.' },
         ])
         return
       }
 
-      // Parse plain text stream (toTextStreamResponse)
+      // Parsuj text stream (toTextStreamResponse)
       const reader = res.body!.getReader()
       const decoder = new TextDecoder()
       let fullText = ''
@@ -83,7 +85,7 @@ export function WidgetChat({ bot, domain }: { bot: BotConfig; domain?: string })
     } catch {
       setMessages(prev => [
         ...prev.slice(0, -1),
-        { role: 'assistant', content: 'Connection error. Please try again.' },
+        { role: 'assistant', content: 'Chyba připojení. Zkus to znovu.' },
       ])
     } finally {
       setLoading(false)
@@ -91,47 +93,58 @@ export function WidgetChat({ bot, domain }: { bot: BotConfig; domain?: string })
     }
   }
 
-  const color = bot.theme_color || '#6366f1'
+  const showBadge = bot.show_badge !== false
 
   return (
-    <div className="flex flex-col h-dvh bg-white font-sans text-sm">
-      {/* Header */}
+    <div className="flex flex-col h-dvh font-sans text-sm" style={{ background: '#F5F1EA', color: '#1A1814' }}>
+
+      {/* Header — bone/paper, 1px border dole */}
       <div
-        className="flex items-center gap-3 px-4 py-3 shrink-0"
-        style={{ background: color }}
+        className="flex items-center gap-3 px-4 py-3 shrink-0 border-b"
+        style={{ borderColor: '#D9D0C0', background: '#EDE7DC' }}
       >
         <span className="text-xl">{bot.avatar}</span>
         <div>
-          <p className="font-semibold text-white text-sm leading-tight">{bot.name}</p>
-          <p className="text-xs text-white/70">Powered by AI</p>
+          <p className="font-semibold text-sm leading-tight" style={{ color: '#1A1814' }}>
+            {bot.name}
+          </p>
+          <p className="text-[11px]" style={{ color: '#6B6359' }}>Online</p>
         </div>
       </div>
 
-      {/* Messages */}
+      {/* Zprávy */}
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
         {messages.map((msg, i) => (
-          <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} gap-2`}>
+          <div
+            key={i}
+            className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} gap-2`}
+          >
             {msg.role === 'assistant' && (
               <div
-                className="h-7 w-7 rounded-full flex items-center justify-center shrink-0 mt-0.5 text-sm"
-                style={{ background: color + '20' }}
+                className="h-7 w-7 flex items-center justify-center shrink-0 mt-0.5 text-sm border"
+                style={{ background: '#EDE7DC', borderColor: '#D9D0C0', borderRadius: '2px' }}
               >
                 {bot.avatar}
               </div>
             )}
             <div
-              className={`max-w-[78%] px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap break-words ${
-                msg.role === 'user'
-                  ? 'text-white rounded-br-sm'
-                  : 'bg-gray-100 text-gray-800 rounded-bl-sm'
-              }`}
-              style={msg.role === 'user' ? { background: color } : undefined}
+              className="max-w-[78%] px-3 py-2 text-sm leading-relaxed whitespace-pre-wrap break-words"
+              style={{
+                borderRadius: '2px',
+                ...(msg.role === 'user'
+                  ? { background: '#D4502A', color: '#F5F1EA' }
+                  : { background: '#EDE7DC', color: '#1A1814', border: '1px solid #D9D0C0' }),
+              }}
             >
               {msg.content || (loading && i === messages.length - 1 ? (
-                <span className="flex items-center gap-1 text-gray-400">
-                  <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                  <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                  <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                <span className="flex items-center gap-1">
+                  {[0, 1, 2].map(j => (
+                    <span
+                      key={j}
+                      className="w-1.5 h-1.5 rounded-full animate-bounce"
+                      style={{ background: '#6B6359', animationDelay: `${j * 150}ms` }}
+                    />
+                  ))}
                 </span>
               ) : '')}
             </div>
@@ -141,7 +154,10 @@ export function WidgetChat({ bot, domain }: { bot: BotConfig; domain?: string })
       </div>
 
       {/* Input */}
-      <div className="px-3 py-3 border-t border-gray-100 shrink-0">
+      <div
+        className="px-3 py-3 shrink-0 border-t"
+        style={{ borderColor: '#D9D0C0', background: '#EDE7DC' }}
+      >
         <div className="flex gap-2 items-center">
           <input
             ref={inputRef}
@@ -149,24 +165,41 @@ export function WidgetChat({ bot, domain }: { bot: BotConfig; domain?: string })
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && !e.shiftKey && send()}
-            placeholder="Type a message..."
+            placeholder="Napiš zprávu..."
             disabled={loading}
-            className="flex-1 px-3.5 py-2.5 rounded-full border border-gray-200 text-sm bg-gray-50 focus:outline-none focus:border-transparent focus:ring-2 transition placeholder:text-gray-400 disabled:opacity-50"
-            style={{ '--tw-ring-color': color } as React.CSSProperties}
+            style={{
+              borderRadius: '2px',
+              background: '#F5F1EA',
+              border: '1px solid #D9D0C0',
+              color: '#1A1814',
+            }}
+            className="flex-1 px-3 py-2 text-sm focus:outline-none focus:border-[#1A1814] transition-colors placeholder:text-[#6B6359] disabled:opacity-50"
           />
           <button
             onClick={send}
             disabled={!input.trim() || loading}
-            className="h-9 w-9 rounded-full flex items-center justify-center transition disabled:opacity-40 shrink-0"
-            style={{ background: color }}
+            style={{ background: '#D4502A', borderRadius: '2px', width: '36px', height: '36px' }}
+            className="flex items-center justify-center transition-opacity disabled:opacity-40 shrink-0 hover:opacity-90"
           >
             {loading
-              ? <Loader2 className="h-4 w-4 text-white animate-spin" />
-              : <Send className="h-4 w-4 text-white" />
+              ? <Loader2 className="h-4 w-4 animate-spin" style={{ color: '#F5F1EA' }} />
+              : <Send className="h-4 w-4" style={{ color: '#F5F1EA' }} />
             }
           </button>
         </div>
-        <p className="text-center text-gray-300 text-[10px] mt-2">Powered by BotCraft</p>
+
+        {/* Badge — skrytý pro Maker+ plány (show_badge === false) */}
+        {showBadge && (
+          <a
+            href="https://botcraft.vercel.app"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block text-center mt-2 font-mono text-[10px] uppercase tracking-wider hover:opacity-70 transition-opacity"
+            style={{ color: '#6B6359', fontFamily: 'monospace' }}
+          >
+            Powered by BotCraft
+          </a>
+        )}
       </div>
     </div>
   )

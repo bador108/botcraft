@@ -20,7 +20,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   }
 
   return (
-    <div className="flex min-h-screen bg-[#09090B]">
+    <div className="flex min-h-screen bg-bone">
       <Sidebar />
       <main className="flex-1 overflow-y-auto pt-14 md:pt-0">
         <div className="max-w-5xl mx-auto px-5 py-8 md:px-8 md:py-10">

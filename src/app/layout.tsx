@@ -18,7 +18,16 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: 'BotCraft — AI Chatbot Builder',
-  description: 'Build AI chatbots with a knowledge base and embed them anywhere.',
+  description: 'Nahraj PDF. Dostaneš skript. Tvoje stránka má chatbota. Postaveno na Groq LPU — odpovědi do 1 vteřiny.',
+  icons: {
+    icon: '/icon.svg',
+    apple: '/icon.svg',
+  },
+  openGraph: {
+    title: 'BotCraft — AI Chatbot Builder',
+    description: 'Postaveno na Groq LPU. Odpovědi do 1 vteřiny. Postaveno v Plzni.',
+    images: ['/og-image.png'], // TODO: vytvořit OG image
+  },
 }
 
 export const viewport: Viewport = {
