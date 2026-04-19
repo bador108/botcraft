@@ -1,5 +1,6 @@
-export type Plan = 'free' | 'pro' | 'business'
+export type Plan = 'free' | 'pro' | 'business' | 'hobby' | 'maker' | 'studio' | 'enterprise'
 export type ChatModel = 'llama-3.1-8b-instant' | 'llama-3.3-70b-versatile' | 'deepseek-r1-distill-llama-70b'
+export type ModelTier = 'fast' | 'balanced' | 'premium'
 
 export interface User {
   id: string
@@ -60,6 +61,19 @@ export interface PlanLimits {
   documents_per_chatbot: number
   chunks_per_chatbot: number
   models: ChatModel[]
+  rag_enabled?: boolean
+  analytics?: boolean
+  csv_export?: boolean
+  custom_branding?: boolean
+  remove_badge?: boolean
+  custom_domain?: boolean
+  webhooks?: boolean
+  ab_testing?: boolean
+  team_seats?: number
+  white_label?: boolean
+  self_hosted?: boolean
+  premium_model_limit?: number
+  rate_limit?: { requests: number; window_seconds: number }
 }
 
 export interface ChatMessage {
