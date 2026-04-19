@@ -47,44 +47,44 @@ export default async function ConversationsPage({ params }: { params: { id: stri
   const totalUser = typedMessages.filter(m => m.role === 'user').length
 
   return (
-    <div>
+    <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-3 mb-5">
+      <div className="flex items-center gap-3">
         <span className="text-2xl">{(chatbot as Chatbot).avatar}</span>
         <div>
-          <h1 className="font-display font-semibold text-white text-lg tracking-tight">
+          <h1 className="font-mono text-2xl font-medium text-ink uppercase tracking-tight">
             {(chatbot as Chatbot).name}
           </h1>
-          <p className="text-xs text-zinc-600 mt-0.5">Conversations</p>
+          <p className="font-mono text-[11px] text-muted uppercase tracking-wider mt-0.5">Konverzace</p>
         </div>
       </div>
 
       <BotNav botId={params.id} />
 
-      {/* Stats */}
-      <div className="flex gap-6 mb-8">
+      {/* Stats strip */}
+      <div className="flex flex-wrap gap-8 py-5 border-y border-paper_border">
         <div>
-          <p className="text-xl font-bold text-white font-display">{typedMessages.length}</p>
-          <p className="text-xs text-zinc-600 mt-0.5">Total messages</p>
+          <p className="font-mono text-2xl font-medium text-ink">{typedMessages.length}</p>
+          <p className="font-mono text-[11px] text-muted uppercase tracking-wider mt-1">Zpráv celkem</p>
         </div>
-        <div className="w-px bg-white/[0.06]" />
+        <div className="w-px bg-paper_border hidden sm:block" />
         <div>
-          <p className="text-xl font-bold text-white font-display">{totalUser}</p>
-          <p className="text-xs text-zinc-600 mt-0.5">User messages</p>
+          <p className="font-mono text-2xl font-medium text-ink">{totalUser}</p>
+          <p className="font-mono text-[11px] text-muted uppercase tracking-wider mt-1">Zpráv od uživatelů</p>
         </div>
-        <div className="w-px bg-white/[0.06]" />
+        <div className="w-px bg-paper_border hidden sm:block" />
         <div>
-          <p className="text-xl font-bold text-white font-display">{grouped.length}</p>
-          <p className="text-xs text-zinc-600 mt-0.5">Active days</p>
+          <p className="font-mono text-2xl font-medium text-ink">{grouped.length}</p>
+          <p className="font-mono text-[11px] text-muted uppercase tracking-wider mt-1">Aktivní dny</p>
         </div>
       </div>
 
       {/* Empty state */}
       {typedMessages.length === 0 && (
-        <div className="border border-white/[0.06] rounded-xl py-16 text-center">
-          <MessageSquare className="h-8 w-8 text-zinc-800 mx-auto mb-3" />
-          <p className="text-sm text-zinc-500 mb-1">No conversations yet</p>
-          <p className="text-xs text-zinc-700">Messages will appear here once users interact with your bot</p>
+        <div className="border border-paper_border border-dashed py-16 text-center" style={{ borderRadius: '2px' }}>
+          <MessageSquare className="h-8 w-8 text-muted mx-auto mb-3" />
+          <p className="font-mono text-sm text-ink uppercase tracking-wide mb-1">Zatím žádné konverzace</p>
+          <p className="text-sm text-muted">Zprávy se zobrazí jakmile uživatelé začnou chatovat</p>
         </div>
       )}
 
@@ -93,24 +93,22 @@ export default async function ConversationsPage({ params }: { params: { id: stri
         {grouped.map(([day, msgs]) => (
           <div key={day}>
             <div className="flex items-center gap-3 mb-4">
-              <p className="text-xs font-medium text-zinc-500">{formatDate(day)}</p>
-              <div className="flex-1 h-px bg-white/[0.05]" />
-              <p className="text-xs text-zinc-700">{msgs.filter(m => m.role === 'user').length} messages</p>
+              <p className="font-mono text-[11px] text-muted uppercase tracking-wider">{formatDate(day)}</p>
+              <div className="flex-1 h-px bg-paper_border" />
+              <p className="font-mono text-[11px] text-muted">{msgs.filter(m => m.role === 'user').length} zpráv</p>
             </div>
 
-            <div className="border border-white/[0.06] rounded-xl overflow-hidden divide-y divide-white/[0.04]">
+            <div className="border border-paper_border divide-y divide-paper_border overflow-hidden" style={{ borderRadius: '2px' }}>
               {[...msgs].reverse().map((msg) => (
                 <div
                   key={msg.id}
-                  className={`flex gap-3 px-4 py-3 ${
-                    msg.role === 'user' ? 'bg-transparent' : 'bg-white/[0.01]'
-                  }`}
+                  className={`flex gap-3 px-4 py-3 ${msg.role === 'user' ? 'bg-bone' : 'bg-paper'}`}
                 >
-                  <div className={`h-6 w-6 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
+                  <div className={`h-6 w-6 flex items-center justify-center shrink-0 mt-0.5 border ${
                     msg.role === 'user'
-                      ? 'bg-zinc-800 text-zinc-400'
-                      : 'bg-indigo-950/60 text-indigo-400 border border-indigo-900/40'
-                  }`}>
+                      ? 'bg-bone border-paper_border text-muted'
+                      : 'bg-rust/10 border-rust/20 text-rust'
+                  }`} style={{ borderRadius: '2px' }}>
                     {msg.role === 'user'
                       ? <User className="h-3 w-3" />
                       : <Bot className="h-3 w-3" />
@@ -118,12 +116,12 @@ export default async function ConversationsPage({ params }: { params: { id: stri
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[11px] font-medium text-zinc-500">
-                        {msg.role === 'user' ? 'User' : (chatbot as Chatbot).name}
+                      <span className="font-mono text-[11px] text-muted uppercase tracking-wider">
+                        {msg.role === 'user' ? 'Uživatel' : (chatbot as Chatbot).name}
                       </span>
-                      <span className="text-[11px] text-zinc-700">{formatTime(msg.created_at)}</span>
+                      <span className="font-mono text-[11px] text-muted">{formatTime(msg.created_at)}</span>
                     </div>
-                    <p className="text-sm text-zinc-300 leading-relaxed whitespace-pre-wrap">{msg.content}</p>
+                    <p className="text-sm text-ink leading-relaxed whitespace-pre-wrap">{msg.content}</p>
                   </div>
                 </div>
               ))}
@@ -133,7 +131,7 @@ export default async function ConversationsPage({ params }: { params: { id: stri
       </div>
 
       {typedMessages.length >= 200 && (
-        <p className="text-xs text-zinc-700 text-center mt-6">Showing last 200 messages</p>
+        <p className="font-mono text-[11px] text-muted text-center mt-6">Zobrazeno posledních 200 zpráv</p>
       )}
     </div>
   )

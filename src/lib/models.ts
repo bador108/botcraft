@@ -30,3 +30,12 @@ export const MODELS: Record<ModelTier, {
     contextSize: '262k znaků',
   },
 }
+
+/** Map DB-stored model IDs (or old string values) to a ModelTier */
+export function legacyModelToTier(model: string): ModelTier {
+  if (model === MODELS.fast.groqId || model === 'fast') return 'fast'
+  if (model === MODELS.balanced.groqId || model === 'balanced') return 'balanced'
+  if (model === MODELS.premium.groqId || model === 'premium') return 'premium'
+  // fallback
+  return 'fast'
+}

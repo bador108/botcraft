@@ -5,14 +5,17 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { UserButton } from '@clerk/nextjs'
-import { LayoutDashboard, Bot, CreditCard, Menu, X } from 'lucide-react'
+import { LayoutDashboard, Bot, CreditCard, FileText, BarChart2, Settings, ExternalLink, Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { clerkAppearance } from '@/lib/clerk-theme'
 
 const nav = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/chatbots',  label: 'Chatboty',  icon: Bot },
-  { href: '/billing',   label: 'Fakturace', icon: CreditCard },
+  { href: '/dashboard',  label: 'Dashboard',  icon: LayoutDashboard },
+  { href: '/chatbots',   label: 'Chatboty',   icon: Bot },
+  { href: '/documents',  label: 'Dokumenty',  icon: FileText },
+  { href: '/analytics',  label: 'Analytika',  icon: BarChart2 },
+  { href: '/billing',    label: 'Fakturace',  icon: CreditCard },
+  { href: '/settings',   label: 'Nastavení',  icon: Settings },
 ]
 
 function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
@@ -38,6 +41,20 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
           </Link>
         )
       })}
+
+      {/* Oddělovač + externý odkaz */}
+      <div className="pt-3 mt-3 border-t border-paper_border">
+        <a
+          href="https://docs.botcraft.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={onNavigate}
+          className="flex items-center gap-3 px-3 py-2.5 text-sm font-mono uppercase tracking-wider text-muted hover:text-ink border-l-2 border-transparent pl-[10px] transition-colors"
+        >
+          <ExternalLink className="h-3.5 w-3.5 shrink-0 text-muted" />
+          Dokumentace
+        </a>
+      </div>
     </nav>
   )
 }

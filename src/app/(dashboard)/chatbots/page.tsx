@@ -2,8 +2,9 @@ import { auth } from '@clerk/nextjs/server'
 import Link from 'next/link'
 import { createServiceClient } from '@/lib/supabase'
 import { PLAN_LIMITS } from '@/lib/plans'
+import { MODELS, legacyModelToTier } from '@/lib/models'
 import { Button } from '@/components/ui/button'
-import { Bot, Plus, ArrowRight, MessageSquare, FileText } from 'lucide-react'
+import { Bot, Plus, ArrowRight, MessageSquare } from 'lucide-react'
 import type { User, Chatbot } from '@/types'
 
 export default async function ChatbotsPage() {
@@ -15,97 +16,99 @@ export default async function ChatbotsPage() {
     db.from('chatbots').select('*').eq('user_id', userId!).order('created_at', { ascending: false }),
   ])
 
-  const plan = (user as User | null)?.plan ?? 'free'
+  const plan = (user as User | null)?.plan ?? 'hobby'
   const limits = PLAN_LIMITS[plan]
   const typedBots = (chatbots ?? []) as Chatbot[]
   const canCreate = limits.chatbots === Infinity || typedBots.length < limits.chatbots
 
   return (
-    <div className="space-y-7">
+    <div className="space-y-8">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-xl font-semibold text-white tracking-tight">Chatbots</h1>
-          <p className="text-sm text-zinc-600 mt-0.5">
+          <h1 className="font-mono text-2xl font-medium text-ink uppercase tracking-tight">Chatboti</h1>
+          <p className="font-mono text-[11px] text-muted uppercase tracking-wider mt-1">
             {typedBots.length}
-            {limits.chatbots !== Infinity ? ` / ${limits.chatbots}` : ''} chatbots
+            {limits.chatbots !== Infinity ? ` / ${limits.chatbots}` : ''} chatbotů
           </p>
         </div>
         {canCreate ? (
           <Link href="/chatbots/new">
-            <Button size="sm">
+            <Button variant="primary" size="sm">
               <Plus className="h-3.5 w-3.5" />
-              New chatbot
+              Nový chatbot
             </Button>
           </Link>
         ) : (
           <Link href="/billing">
-            <Button size="sm" variant="secondary">Upgrade for more</Button>
+            <Button variant="secondary" size="sm">Upgrade pro více →</Button>
           </Link>
         )}
       </div>
 
+      {/* List */}
       {typedBots.length === 0 ? (
-        <div className="border border-white/[0.06] rounded-xl px-6 py-14 text-center">
-          <Bot className="h-9 w-9 text-zinc-800 mx-auto mb-3" />
-          <p className="text-sm text-white mb-1 font-medium">No chatbots yet</p>
-          <p className="text-xs text-zinc-600 mb-5">Create your first chatbot and embed it anywhere</p>
+        <div className="border border-paper_border border-dashed px-6 py-14 text-center" style={{ borderRadius: '2px' }}>
+          <Bot className="h-8 w-8 text-muted mx-auto mb-3" />
+          <p className="font-mono text-sm text-ink uppercase tracking-wide mb-1">Zatím žádný chatbot</p>
+          <p className="text-sm text-muted mb-6">Vytvoř ho za méně než 2 minuty</p>
           <Link href="/chatbots/new">
-            <Button><Plus className="h-3.5 w-3.5" /> Create chatbot</Button>
+            <Button variant="primary">
+              <Plus className="h-3.5 w-3.5" />
+              Vytvořit prvního chatbota
+            </Button>
           </Link>
         </div>
       ) : (
-        <div className="border border-white/[0.06] rounded-xl overflow-hidden divide-y divide-white/[0.04]">
-          {typedBots.map((bot) => (
-            <div key={bot.id} className="flex items-center gap-4 px-5 py-4 hover:bg-white/[0.01] transition-colors group">
-              <span className="text-2xl shrink-0">{bot.avatar}</span>
+        <div className="border border-paper_border divide-y divide-paper_border" style={{ borderRadius: '2px' }}>
+          {typedBots.map((bot) => {
+            const tier = legacyModelToTier(bot.model)
+            const modelLabel = MODELS[tier].label
+            return (
+              <div key={bot.id} className="flex items-center gap-4 px-5 py-4 hover:bg-paper transition-colors group">
+                <span className="text-xl shrink-0">{bot.avatar}</span>
 
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-0.5">
-                  <p className="font-medium text-white text-sm truncate">{bot.name}</p>
-                  <span className={`text-[10px] px-1.5 py-0.5 rounded-full border font-medium ${
-                    bot.is_active
-                      ? 'bg-emerald-950/40 text-emerald-400 border-emerald-900/50'
-                      : 'bg-zinc-900 text-zinc-500 border-zinc-800'
-                  }`}>
-                    {bot.is_active ? 'Active' : 'Inactive'}
-                  </span>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <p className="font-mono text-sm font-medium text-ink truncate">{bot.name}</p>
+                    {/* Status badge */}
+                    <span
+                      className={`font-mono text-[10px] px-2 py-0.5 border uppercase tracking-wider shrink-0 ${
+                        bot.is_active
+                          ? 'text-success border-success bg-success/5'
+                          : 'text-muted border-paper_border'
+                      }`}
+                      style={{ borderRadius: '2px' }}
+                    >
+                      {bot.is_active ? 'Aktivní' : 'Neaktivní'}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3 font-mono text-[11px] text-muted">
+                    <span className="flex items-center gap-1">
+                      <MessageSquare className="h-3 w-3" />
+                      {bot.message_count_month} zpráv/měs
+                    </span>
+                    <span>·</span>
+                    {/* Model badge — only public label, no internal ID */}
+                    <span className="border border-paper_border px-1.5 py-0.5 uppercase tracking-wider" style={{ borderRadius: '2px' }}>
+                      {modelLabel}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-3 text-[11px] text-zinc-600">
-                  <span className="flex items-center gap-1">
-                    <MessageSquare className="h-3 w-3" />
-                    {bot.message_count_month} msgs/mo
-                  </span>
-                  <span>·</span>
-                  <span className="flex items-center gap-1">
-                    <FileText className="h-3 w-3" />
-                    {bot.model.split('-').slice(0, 2).join(' ')}
-                  </span>
+
+                <div className="flex items-center gap-1 shrink-0">
+                  <Link
+                    href={`/chatbots/${bot.id}`}
+                    className="flex items-center gap-1.5 font-mono text-[11px] text-muted uppercase tracking-wider px-3 py-1.5 hover:text-ink hover:bg-paper border border-transparent hover:border-paper_border transition-colors"
+                    style={{ borderRadius: '2px' }}
+                  >
+                    Nastavení
+                    <ArrowRight className="h-3 w-3 opacity-60 group-hover:opacity-100" />
+                  </Link>
                 </div>
               </div>
-
-              <div className="flex items-center gap-1 shrink-0">
-                <Link
-                  href={`/chatbots/${bot.id}/conversations`}
-                  className="px-3 py-1.5 text-xs text-zinc-500 hover:text-white hover:bg-white/[0.05] rounded-lg transition-colors"
-                >
-                  Conversations
-                </Link>
-                <Link
-                  href={`/chatbots/${bot.id}/embed`}
-                  className="px-3 py-1.5 text-xs text-zinc-500 hover:text-white hover:bg-white/[0.05] rounded-lg transition-colors"
-                >
-                  Embed
-                </Link>
-                <Link
-                  href={`/chatbots/${bot.id}`}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-zinc-400 hover:text-white hover:bg-white/[0.05] rounded-lg transition-colors"
-                >
-                  Settings
-                  <ArrowRight className="h-3 w-3 opacity-60 group-hover:opacity-100" />
-                </Link>
-              </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
     </div>

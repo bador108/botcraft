@@ -23,49 +23,49 @@ export default async function ChatbotSettingsPage({ params }: { params: { id: st
 
   if (!chatbot) notFound()
 
-  const plan = (user as User | null)?.plan ?? 'free'
+  const plan = (user as User | null)?.plan ?? 'hobby'
   const bot = chatbot as Chatbot
 
   return (
-    <div>
+    <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-3 mb-5">
+      <div className="flex items-center gap-3">
         <span className="text-2xl">{bot.avatar}</span>
         <div>
-          <h1 className="font-display font-semibold text-white text-lg tracking-tight">{bot.name}</h1>
-          <p className="text-xs text-zinc-600 mt-0.5">Settings</p>
+          <h1 className="font-mono text-2xl font-medium text-ink uppercase tracking-tight">{bot.name}</h1>
+          <p className="font-mono text-[11px] text-muted uppercase tracking-wider mt-0.5">Nastavení</p>
         </div>
       </div>
 
       <BotNav botId={params.id} />
 
-      {/* Quick analytics */}
-      <div className="flex flex-wrap gap-6 py-4 mb-7 border-y border-white/[0.06]">
+      {/* Quick stats strip */}
+      <div className="flex flex-wrap gap-8 py-5 border-y border-paper_border">
         <div>
-          <p className="text-xl font-bold text-white font-display">{bot.message_count_month}</p>
-          <p className="text-xs text-zinc-600 mt-0.5 flex items-center gap-1.5">
-            <MessageSquare className="h-3 w-3" /> Msgs this month
+          <p className="font-mono text-2xl font-medium text-ink">{bot.message_count_month}</p>
+          <p className="font-mono text-[11px] text-muted uppercase tracking-wider mt-1 flex items-center gap-1.5">
+            <MessageSquare className="h-3 w-3" /> Zprávy tento měsíc
           </p>
         </div>
-        <div className="w-px bg-white/[0.06] hidden sm:block" />
+        <div className="w-px bg-paper_border hidden sm:block" />
         <div>
-          <p className="text-xl font-bold text-white font-display">{docs?.length ?? 0}</p>
-          <p className="text-xs text-zinc-600 mt-0.5 flex items-center gap-1.5">
-            <FileText className="h-3 w-3" /> Documents
+          <p className="font-mono text-2xl font-medium text-ink">{docs?.length ?? 0}</p>
+          <p className="font-mono text-[11px] text-muted uppercase tracking-wider mt-1 flex items-center gap-1.5">
+            <FileText className="h-3 w-3" /> Dokumenty
           </p>
         </div>
-        <div className="w-px bg-white/[0.06] hidden sm:block" />
+        <div className="w-px bg-paper_border hidden sm:block" />
         <div>
-          <p className="text-xl font-bold text-white font-display">{msgCount ?? 0}</p>
-          <p className="text-xs text-zinc-600 mt-0.5 flex items-center gap-1.5">
-            <MessageSquare className="h-3 w-3" /> Total messages
+          <p className="font-mono text-2xl font-medium text-ink">{msgCount ?? 0}</p>
+          <p className="font-mono text-[11px] text-muted uppercase tracking-wider mt-1 flex items-center gap-1.5">
+            <MessageSquare className="h-3 w-3" /> Zpráv celkem
           </p>
         </div>
-        <div className="w-px bg-white/[0.06] hidden sm:block" />
+        <div className="w-px bg-paper_border hidden sm:block" />
         <div>
-          <p className="text-sm font-semibold text-white">{formatDate(bot.created_at)}</p>
-          <p className="text-xs text-zinc-600 mt-0.5 flex items-center gap-1.5">
-            <Calendar className="h-3 w-3" /> Created
+          <p className="font-mono text-sm font-medium text-ink">{formatDate(bot.created_at)}</p>
+          <p className="font-mono text-[11px] text-muted uppercase tracking-wider mt-1 flex items-center gap-1.5">
+            <Calendar className="h-3 w-3" /> Vytvořeno
           </p>
         </div>
       </div>

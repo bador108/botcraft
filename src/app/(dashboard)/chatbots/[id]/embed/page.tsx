@@ -22,10 +22,10 @@ export default function EmbedPage() {
   }
 
   return (
-    <div>
-      <div className="mb-5">
-        <h1 className="font-display font-semibold text-white text-lg tracking-tight">Embed</h1>
-        <p className="text-xs text-zinc-600 mt-0.5">Add this script to your website</p>
+    <div className="space-y-6">
+      <div>
+        <h1 className="font-mono text-2xl font-medium text-ink uppercase tracking-tight">Embed</h1>
+        <p className="font-mono text-[11px] text-muted uppercase tracking-wider mt-1">Vložit chatbota na web</p>
       </div>
 
       <BotNav botId={botId} />
@@ -33,62 +33,45 @@ export default function EmbedPage() {
       <div className="grid md:grid-cols-2 gap-8 items-start">
         {/* Left: snippet + instructions */}
         <div className="space-y-6">
-          {/* Code block */}
           <div>
-            <p className="text-xs text-zinc-500 uppercase tracking-[0.12em] font-medium mb-3">Embed script</p>
-            <div className="rounded-xl overflow-hidden border border-white/[0.07]">
-              <div className="flex items-center justify-between px-4 py-2 bg-[#0D0D12] border-b border-white/[0.07]">
-                <span className="text-[11px] text-zinc-600 font-mono">index.html</span>
+            <p className="font-mono text-[11px] text-muted uppercase tracking-wider mb-3">Embed skript</p>
+            <div className="border border-paper_border overflow-hidden" style={{ borderRadius: '2px' }}>
+              <div className="flex items-center justify-between px-4 py-2 bg-paper border-b border-paper_border">
+                <span className="font-mono text-[11px] text-muted">index.html</span>
                 <button
                   onClick={copy}
-                  className="flex items-center gap-1.5 text-[11px] text-zinc-500 hover:text-white transition-colors"
+                  className="flex items-center gap-1.5 font-mono text-[11px] text-muted hover:text-ink transition-colors"
                 >
                   {copied
-                    ? <><Check className="h-3 w-3 text-emerald-400" /><span className="text-emerald-400">Copied</span></>
-                    : <><Copy className="h-3 w-3" />Copy</>
+                    ? <><Check className="h-3 w-3 text-success" /><span className="text-success">Zkopírováno</span></>
+                    : <><Copy className="h-3 w-3" />Kopírovat</>
                   }
                 </button>
               </div>
-              <pre className="bg-[#09090D] px-5 py-4 text-[13px] font-mono leading-relaxed overflow-x-auto">
+              <pre className="bg-bone px-5 py-4 text-[13px] font-mono leading-relaxed overflow-x-auto text-ink">
                 <code>
-                  <div className="text-zinc-600">{'<!-- Add before </body> -->'}</div>
-                  <div>
-                    <span className="text-indigo-400">{'<script'}</span>
-                  </div>
-                  <div>
-                    {'  '}<span className="text-lime-400">src</span>
-                    <span className="text-zinc-400">{"=\""}</span>
-                    <span className="text-orange-300">{appUrl}/widget.js</span>
-                    <span className="text-zinc-400">{"\""}</span>
-                  </div>
-                  <div>
-                    {'  '}<span className="text-lime-400">data-bot-id</span>
-                    <span className="text-zinc-400">{"=\""}</span>
-                    <span className="text-orange-300">{botId}</span>
-                    <span className="text-zinc-400">{"\""}</span>
-                  </div>
-                  <div>
-                    {'  '}<span className="text-lime-400">async</span>
-                    <span className="text-indigo-400">{'>'}</span>
-                  </div>
-                  <div><span className="text-indigo-400">{'</script>'}</span></div>
+                  <div className="text-muted">{'<!-- Vlož před </body> -->'}</div>
+                  <div>{'<script'}</div>
+                  <div>{'  src="'}<span className="text-rust">{appUrl}/widget.js</span>{'"'}</div>
+                  <div>{'  data-bot-id="'}<span className="text-rust">{botId}</span>{'"'}</div>
+                  <div>{'  async>'}</div>
+                  <div>{'</script>'}</div>
                 </code>
               </pre>
             </div>
           </div>
 
-          {/* Steps */}
           <div>
-            <p className="text-xs text-zinc-500 uppercase tracking-[0.12em] font-medium mb-3">How to install</p>
+            <p className="font-mono text-[11px] text-muted uppercase tracking-wider mb-3">Jak nainstalovat</p>
             <div className="space-y-3">
               {[
-                'Paste the script just before the closing </body> tag',
-                'A chat bubble appears in the bottom-right corner automatically',
-                'Users click to open — powered by your knowledge base',
-                'Set Allowed Domains in Settings to restrict embedding to your sites',
+                'Vlož skript těsně před uzavírací tag </body>',
+                'Chat bublina se automaticky zobrazí v pravém dolním rohu',
+                'Uživatelé kliknou pro otevření — napojeno na tvoji knowledge base',
+                'V nastavení nastav Povolené domény pro omezení embeddingu',
               ].map((step, i) => (
-                <div key={i} className="flex gap-3 text-sm text-zinc-400">
-                  <span className="font-mono text-xs text-indigo-500 pt-0.5 shrink-0 w-4">{String(i + 1).padStart(2, '0')}</span>
+                <div key={i} className="flex gap-3 text-sm text-muted">
+                  <span className="font-mono text-[11px] text-rust pt-0.5 shrink-0 w-5">{String(i + 1).padStart(2, '0')}</span>
                   {step}
                 </div>
               ))}
@@ -100,10 +83,10 @@ export default function EmbedPage() {
               href={`${appUrl}/widget/${botId}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-white transition-colors"
+              className="inline-flex items-center gap-2 font-mono text-[11px] text-muted uppercase tracking-wider hover:text-ink transition-colors"
             >
-              <ExternalLink className="h-3.5 w-3.5" />
-              Open widget in new tab
+              <ExternalLink className="h-3 w-3" />
+              Otevřít widget v novém okně
             </a>
           )}
         </div>
@@ -111,15 +94,15 @@ export default function EmbedPage() {
         {/* Right: live preview */}
         {appUrl && (
           <div>
-            <p className="text-xs text-zinc-500 uppercase tracking-[0.12em] font-medium mb-3">Live preview</p>
-            <div className="border border-white/[0.07] rounded-xl overflow-hidden bg-[#0D0D12]">
-              <div className="flex items-center gap-1.5 px-4 py-2.5 border-b border-white/[0.07]">
-                <span className="h-2 w-2 rounded-full bg-white/10" />
-                <span className="h-2 w-2 rounded-full bg-white/10" />
-                <span className="h-2 w-2 rounded-full bg-white/10" />
-                <span className="ml-3 text-[11px] text-zinc-600">Widget preview</span>
+            <p className="font-mono text-[11px] text-muted uppercase tracking-wider mb-3">Náhled widgetu</p>
+            <div className="border border-paper_border overflow-hidden" style={{ borderRadius: '2px' }}>
+              <div className="flex items-center gap-1.5 px-4 py-2 border-b border-paper_border bg-paper">
+                <span className="h-2 w-2 bg-paper_border border border-paper_border" style={{ borderRadius: '50%' }} />
+                <span className="h-2 w-2 bg-paper_border border border-paper_border" style={{ borderRadius: '50%' }} />
+                <span className="h-2 w-2 bg-paper_border border border-paper_border" style={{ borderRadius: '50%' }} />
+                <span className="ml-3 font-mono text-[11px] text-muted">Náhled</span>
               </div>
-              <div className="relative bg-zinc-900/50" style={{ height: '480px' }}>
+              <div className="relative bg-bone" style={{ height: '480px' }}>
                 <iframe
                   src={`${appUrl}/widget/${botId}`}
                   className="w-full h-full border-0"
