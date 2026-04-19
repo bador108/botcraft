@@ -2,25 +2,22 @@ const models = [
   {
     icon: '🏃',
     name: 'Fast',
-    groq: 'llama-3.1-8b-instant',
-    speed: '~1000 tok/s',
-    context: '128k',
+    speed: '~1 vteřina',
+    context: '128k znaků',
     usage: 'FAQ, jednoduché dotazy',
   },
   {
     icon: '⚖️',
     name: 'Balanced',
-    groq: 'llama-3.3-70b-versatile',
-    speed: '~500 tok/s',
-    context: '131k',
+    speed: '~1–2 vteřiny',
+    context: '131k znaků',
     usage: 'Komplexní RAG, reasoning',
   },
   {
     icon: '🎯',
     name: 'Premium',
-    groq: 'deepseek-r1-distill-llama-70b',
-    speed: '~200 tok/s',
-    context: '262k',
+    speed: '~2–3 vteřiny',
+    context: '262k znaků',
     usage: 'Dlouhé dokumenty, nejvyšší kvalita',
   },
 ]
@@ -36,7 +33,7 @@ export function ModelTable() {
           Tři modely. Žádný marketing
         </h2>
         <p className="text-muted text-sm mb-10">
-          Powered by Groq LPU. Žádný token billing navrch — limit zpráv je limit zpráv.
+          Všechny tři modely běží v reálném čase. Žádný token billing navrch — limit zpráv je limit zpráv.
         </p>
 
         {/* Table */}
@@ -56,7 +53,6 @@ export function ModelTable() {
                   <td className="py-4 pr-8">
                     <span className="mr-2">{m.icon}</span>
                     <span className="font-mono text-sm font-medium text-ink">{m.name}</span>
-                    <span className="ml-2 text-[11px] text-muted font-mono">({m.groq})</span>
                   </td>
                   <td className="py-4 pr-8 font-mono text-sm text-ink">{m.speed}</td>
                   <td className="py-4 pr-8 font-mono text-sm text-ink">{m.context}</td>

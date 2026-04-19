@@ -24,7 +24,7 @@ export default async function SignInPage() {
             Tvoji boti čekají
           </h1>
           <p className="mt-4 text-muted text-base max-w-xs">
-            Postaveno v Plzni. Běží na Groq LPU. Odpovědi do 1 vteřiny.
+            Postaveno pro tvůrce. Optimalizováno pro rychlost.
           </p>
         </div>
         <p className="font-mono text-[11px] text-muted">© 2026 BotCraft</p>

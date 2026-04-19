@@ -13,7 +13,7 @@ const PLANS = [
     price: 0,
     features: [
       '1 chatbot',
-      'Fast model (llama-3.1-8b)',
+      'Fast model',
       '50 zpráv/měs',
       '1 dokument',
       '"Powered by BotCraft" badge',

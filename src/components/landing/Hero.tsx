@@ -23,7 +23,7 @@ export function Hero() {
 
           {/* Podtitulek */}
           <p className="text-muted text-base leading-relaxed mb-8 max-w-sm">
-            Postaveno na Groq LPU — odpovědi do 1 vteřiny. Žádné kódování. Žádné skryté poplatky.
+            Odpovědi v reálném čase. Žádné kódování. Žádné skryté poplatky.
           </p>
 
           {/* CTA row */}

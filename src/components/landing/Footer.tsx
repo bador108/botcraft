@@ -68,7 +68,7 @@ export function Footer() {
             <span className="font-mono text-[11px] text-muted uppercase tracking-wider">BotCraft</span>
           </div>
           <p className="font-mono text-[11px] text-muted">
-            Postaveno v Plzni · Běží na Groq · © {new Date().getFullYear()} BotCraft
+            © {new Date().getFullYear()} BotCraft · Postaveno pro tvůrce
           </p>
         </div>
       </div>

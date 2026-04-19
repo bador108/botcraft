@@ -1,6 +1,14 @@
-// Clerk v7 — Appearance type z @clerk/nextjs
+// Clerk v7 — global appearance config
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const clerkAppearance: any = {
+  layout: {
+    logoImageUrl: '/logo.svg',
+    logoLinkUrl: '/',
+    logoPlacement: 'inside',
+    showOptionalFields: true,
+    socialButtonsPlacement: 'bottom',
+    socialButtonsVariant: 'blockButton',
+  },
   variables: {
     colorPrimary: '#D4502A',
     colorBackground: '#F5F1EA',

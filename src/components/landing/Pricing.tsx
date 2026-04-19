@@ -9,7 +9,7 @@ const plans = [
     popular: false,
     features: [
       '1 chatbot',
-      'Fast model (llama-3.1-8b)',
+      'Fast model',
       '50 zpráv/měs (hard cap)',
       '1 dokument, max 2 MB',
       '"Powered by BotCraft" badge',
@@ -78,7 +78,7 @@ const plans = [
       'SLA 99.9%',
       'SSO/SAML',
       'Dedicated support',
-      'BYOK (vlastní Groq API key)',
+      'BYOK (vlastní AI API key)',
     ],
     note: null,
     cta: 'Kontakt',

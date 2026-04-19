@@ -25,8 +25,8 @@ const items = [
     a: 'Ano. Žádná smlouva, žádný notice period.',
   },
   {
-    q: 'Proč Groq místo OpenAI?',
-    a: '10x rychlejší odpovědi a fixní cena za zprávu. Pro real-time chat widget je rychlost všechno.',
+    q: 'Proč jsou odpovědi tak rychlé?',
+    a: 'Používáme specializovanou infrastrukturu optimalizovanou pro chat v reálném čase. Odpovědi přichází typicky do 1 vteřiny, zatímco běžná AI řešení trvají 5–10 vteřin. Pro návštěvníky tvého webu to znamená plynulou konverzaci bez čekání.',
   },
 ]
 

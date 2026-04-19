@@ -34,7 +34,7 @@ const features = [
   {
     icon: Server,
     title: 'Self-hosted',
-    desc: 'Docker compose, vlastní Groq API key, vlastní data.',
+    desc: 'Docker compose, vlastní AI API key, vlastní data.',
     badge: 'Enterprise',
   },
 ]
