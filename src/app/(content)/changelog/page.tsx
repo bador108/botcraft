@@ -86,29 +86,29 @@ const entries: {
 ]
 
 const typeConfig: Record<ChangeType, { label: string; color: string }> = {
-  new:      { label: 'Nové',      color: 'text-emerald-400' },
-  improved: { label: 'Vylepšeno', color: 'text-indigo-400'  },
-  fixed:    { label: 'Opraveno',  color: 'text-amber-400'   },
+  new:      { label: 'Nové',      color: 'text-[#059669]' },
+  improved: { label: 'Vylepšeno', color: 'text-[#2563EB]' },
+  fixed:    { label: 'Opraveno',  color: 'text-[#D4500A]' },
 }
 
 export default function ChangelogPage() {
   return (
     <div>
-      <p className="text-xs text-zinc-600 uppercase tracking-[0.15em] font-medium mb-3">Changelog</p>
-      <h1 className="font-display text-4xl font-bold text-white tracking-tight mb-3">Co je nového</h1>
-      <p className="text-zinc-500 text-sm mb-14">Nejnovější změny nahoře.</p>
+      <p className="text-xs text-[#A8A8A8] uppercase tracking-[0.15em] font-medium mb-3">Changelog</p>
+      <h1 className="font-display text-4xl font-bold text-[#0A0A0A] tracking-tight mb-3">Co je nového</h1>
+      <p className="text-[#6B6B6B] text-sm mb-14">Nejnovější změny nahoře.</p>
 
       <div>
         {entries.map((entry, i) => (
           <div
             key={entry.version}
             className={`grid md:grid-cols-[140px_1fr] gap-4 md:gap-10 py-10 ${
-              i !== entries.length - 1 ? 'border-b border-white/[0.06]' : ''
+              i !== entries.length - 1 ? 'border-b border-black/[0.06]' : ''
             }`}
           >
             <div className="md:pt-0.5">
-              <p className="font-mono text-sm font-medium text-white">{entry.version}</p>
-              <p className="text-xs text-zinc-600 mt-1">{entry.date}</p>
+              <p className="font-mono text-sm font-semibold text-[#0A0A0A]">{entry.version}</p>
+              <p className="text-xs text-[#A8A8A8] mt-1">{entry.date}</p>
             </div>
 
             <div className="space-y-5">
@@ -119,8 +119,8 @@ export default function ChangelogPage() {
                   </p>
                   <ul className="space-y-2">
                     {items.map((item) => (
-                      <li key={item} className="flex items-start gap-2.5 text-sm text-zinc-400">
-                        <span className="mt-2 h-1 w-1 rounded-full bg-zinc-700 shrink-0" />
+                      <li key={item} className="flex items-start gap-2.5 text-sm text-[#6B6B6B]">
+                        <span className="mt-2 h-1.5 w-1.5 rounded-full bg-black/15 shrink-0" />
                         {item}
                       </li>
                     ))}

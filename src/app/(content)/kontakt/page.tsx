@@ -33,49 +33,49 @@ const contacts = [
 export default function KontaktPage() {
   return (
     <div>
-      <p className="text-xs text-zinc-600 uppercase tracking-[0.15em] font-medium mb-3">Kontakt</p>
-      <h1 className="font-display text-4xl font-bold text-white tracking-tight mb-4">Napiš nám</h1>
-      <p className="text-zinc-500 text-sm mb-14">
+      <p className="text-xs text-[#A8A8A8] uppercase tracking-[0.15em] font-medium mb-3">Kontakt</p>
+      <h1 className="font-display text-4xl font-bold text-[#0A0A0A] tracking-tight mb-4">Napiš nám</h1>
+      <p className="text-[#6B6B6B] text-sm mb-14">
         Odpovídáme obvykle do 24 hodin. Na placených plánech do 12 hodin.
       </p>
 
       {/* Kontaktní e-maily */}
       <div className="grid sm:grid-cols-2 gap-4 mb-14">
         {contacts.map(({ label, email, desc }) => (
-          <div key={email} className="p-5 rounded-xl border border-white/[0.06] bg-[#0E0E12]">
-            <p className="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-2">{label}</p>
+          <div key={label} className="p-5 rounded-xl border border-black/[0.06] bg-white shadow-sm">
+            <p className="text-xs font-mono text-[#A8A8A8] uppercase tracking-wider mb-2">{label}</p>
             <Link
               href={`mailto:${email}`}
-              className="text-sm font-medium text-indigo-400 hover:text-indigo-300 transition-colors"
+              className="text-sm font-medium text-[#D4500A] hover:opacity-70 transition-opacity"
             >
               {email}
             </Link>
-            <p className="text-xs text-zinc-600 mt-1.5 leading-relaxed">{desc}</p>
+            <p className="text-xs text-[#6B6B6B] mt-1.5 leading-relaxed">{desc}</p>
           </div>
         ))}
       </div>
 
       {/* Formulář */}
       <div className="mb-14">
-        <h2 className="font-display text-xl font-bold text-white mb-6">Formulář</h2>
+        <h2 className="font-display text-xl font-bold text-[#0A0A0A] mb-6">Formulář</h2>
         <ContactForm />
       </div>
 
       {/* Security */}
-      <div className="border-t border-white/[0.06] pt-10">
-        <h2 className="font-display text-base font-semibold text-white mb-3">
+      <div className="border-t border-black/[0.06] pt-10">
+        <h2 className="font-display text-base font-semibold text-[#0A0A0A] mb-3">
           Hlášení bezpečnostních chyb
         </h2>
-        <p className="text-sm text-zinc-500 leading-relaxed mb-2">
+        <p className="text-sm text-[#6B6B6B] leading-relaxed mb-2">
           Našel/a jsi zranitelnost? Díky, že to hlásíš zodpovědně.
         </p>
         <Link
           href="mailto:fakturosupport@gmail.com"
-          className="text-sm text-indigo-400 hover:text-indigo-300 transition-colors"
+          className="text-sm text-[#D4500A] hover:opacity-70 transition-opacity"
         >
           fakturosupport@gmail.com
         </Link>
-        <p className="text-xs text-zinc-600 mt-2">
+        <p className="text-xs text-[#6B6B6B] mt-2">
           Odpovídáme do 48 hodin. Prosíme o 90 dnů před zveřejněním, než vydáme patch.
         </p>
       </div>

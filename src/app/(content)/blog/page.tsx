@@ -45,12 +45,18 @@ const posts = [
   },
 ]
 
+const TAG_COLORS: Record<string, string> = {
+  Návod:     'text-[#D4500A] bg-[#D4500A]/8',
+  Technické: 'text-[#2563EB] bg-[#2563EB]/8',
+  Byznys:    'text-[#059669] bg-[#059669]/8',
+}
+
 export default function BlogPage() {
   return (
     <div>
-      <p className="text-xs text-zinc-600 uppercase tracking-[0.15em] font-medium mb-3">Blog</p>
-      <h1 className="font-display text-4xl font-bold text-white tracking-tight mb-4">Čtení</h1>
-      <p className="text-zinc-500 text-sm mb-14 max-w-xl">
+      <p className="text-xs text-[#A8A8A8] uppercase tracking-[0.15em] font-medium mb-3">Blog</p>
+      <h1 className="font-display text-4xl font-bold text-[#0A0A0A] tracking-tight mb-4">Čtení</h1>
+      <p className="text-[#6B6B6B] text-sm mb-14 max-w-xl">
         Návody, úvahy a občas i trocha rantu o AI chatbotech, embed widgetech a tom, jak to všechno
         dělat, aby to nevypadalo jako z roku 2020.
       </p>
@@ -59,26 +65,26 @@ export default function BlogPage() {
         {posts.map((post, i) => (
           <article
             key={post.slug}
-            className={`py-8 ${i !== posts.length - 1 ? 'border-b border-white/[0.06]' : ''}`}
+            className={`py-8 ${i !== posts.length - 1 ? 'border-b border-black/[0.06]' : ''}`}
           >
             <div className="flex items-center gap-2.5 mb-3">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-indigo-400">
+              <span className={`text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full ${TAG_COLORS[post.tag] ?? 'text-[#6B6B6B] bg-black/5'}`}>
                 {post.tag}
               </span>
-              <span className="text-zinc-700 text-xs">·</span>
-              <span className="text-[11px] text-zinc-600">{post.date}</span>
-              <span className="text-zinc-700 text-xs">·</span>
-              <span className="text-[11px] text-zinc-600">{post.readTime}</span>
+              <span className="text-[#A8A8A8] text-xs">·</span>
+              <span className="text-[11px] text-[#A8A8A8]">{post.date}</span>
+              <span className="text-[#A8A8A8] text-xs">·</span>
+              <span className="text-[11px] text-[#A8A8A8]">{post.readTime}</span>
             </div>
-            <h2 className="font-display text-xl font-bold text-white mb-2 leading-snug tracking-tight">
+            <h2 className="font-display text-xl font-bold text-[#0A0A0A] mb-2 leading-snug tracking-tight">
               <Link
                 href={`/blog/${post.slug}`}
-                className="hover:text-zinc-300 transition-colors"
+                className="hover:text-[#D4500A] transition-colors"
               >
                 {post.title}
               </Link>
             </h2>
-            <p className="text-sm text-zinc-500 leading-relaxed max-w-2xl">{post.excerpt}</p>
+            <p className="text-sm text-[#6B6B6B] leading-relaxed max-w-2xl">{post.excerpt}</p>
           </article>
         ))}
       </div>
