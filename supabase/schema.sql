@@ -47,7 +47,7 @@ CREATE TABLE chunks (
   document_id UUID NOT NULL REFERENCES documents(id) ON DELETE CASCADE,
   chatbot_id UUID NOT NULL REFERENCES chatbots(id) ON DELETE CASCADE,
   content TEXT NOT NULL,
-  embedding vector(768),
+  embedding vector(1024), -- Cohere embed-multilingual-v3.0
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -65,16 +65,18 @@ CREATE INDEX ON chunks USING ivfflat (embedding vector_cosine_ops) WITH (lists =
 
 -- Similarity search function
 CREATE OR REPLACE FUNCTION match_chunks(
-  query_embedding vector(768),
+  query_embedding vector(1024), -- Cohere embed-multilingual-v3.0
   match_chatbot_id UUID,
   match_count INT DEFAULT 5
 )
-RETURNS TABLE(content TEXT, similarity FLOAT)
+RETURNS TABLE(id UUID, content TEXT, similarity FLOAT, document_id UUID)
 LANGUAGE SQL STABLE
 AS $$
   SELECT
+    id,
     content,
-    1 - (embedding <=> query_embedding) AS similarity
+    1 - (embedding <=> query_embedding) AS similarity,
+    document_id
   FROM chunks
   WHERE chatbot_id = match_chatbot_id
     AND embedding IS NOT NULL

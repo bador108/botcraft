@@ -17,7 +17,13 @@ async function getUserEmail(userId: string): Promise<string | null> {
   }
 }
 
-type NotifKey = 'limit_80' | 'limit_100' | 'weekly_summary' | 'failed_payment' | 'product_updates'
+type NotifKey =
+  | 'limit_80'
+  | 'limit_100'
+  | 'weekly_summary'
+  | 'failed_payment'
+  | 'product_updates'
+  | 'account_deletion'
 
 async function isEnabled(userId: string, key: NotifKey): Promise<boolean> {
   const db = createServiceClient()
@@ -34,11 +40,15 @@ export async function sendEmail(params: {
   subject: string
   html: string
   notificationType: NotifKey
+  /** true = billing/security emaily, ignoruje user preference */
+  transactional?: boolean
 }) {
   if (!process.env.RESEND_API_KEY) return
 
-  const enabled = await isEnabled(params.userId, params.notificationType)
-  if (!enabled) return
+  if (!params.transactional) {
+    const enabled = await isEnabled(params.userId, params.notificationType)
+    if (!enabled) return
+  }
 
   const email = await getUserEmail(params.userId)
   if (!email) return
@@ -47,6 +57,7 @@ export async function sendEmail(params: {
   await resend.emails.send({
     from: process.env.FROM_EMAIL ?? 'BotCraft <noreply@botcraft.app>',
     to: email,
+    replyTo: process.env.REPLY_TO_EMAIL,
     subject: params.subject,
     html: params.html,
   })

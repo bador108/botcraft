@@ -2,7 +2,7 @@ import { auth } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
 import { chunkText } from '@/lib/rag'
-import { embedText } from '@/lib/openai'
+import { embedChunks } from '@/lib/documents/embed'
 
 export const maxDuration = 60
 
@@ -42,7 +42,7 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
 
   // Re-chunk and re-embed
   const newChunks = chunkText(fullText)
-  const embeddings = await Promise.all(newChunks.map(c => embedText(c)))
+  const embeddings = await embedChunks(newChunks)
 
   const rows = newChunks.map((content, i) => ({
     document_id: id,

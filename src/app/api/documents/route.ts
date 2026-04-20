@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
 import { PLAN_LIMITS } from '@/lib/plans'
 import { chunkText, extractTextFromFile } from '@/lib/rag'
-import { embedText } from '@/lib/openai'
+import { embedChunks } from '@/lib/documents/embed'
 import { triggerWebhooks } from '@/lib/webhooks/send'
 import type { User } from '@/types'
 
@@ -115,21 +115,17 @@ export async function POST(req: Request) {
 
   if (docError || !doc) return NextResponse.json({ error: 'Failed to create document' }, { status: 500 })
 
-  // Embed a vlož chunky po 10
-  const BATCH = 10
-  for (let i = 0; i < allowedChunks.length; i += BATCH) {
-    const batch = allowedChunks.slice(i, i + BATCH)
-    const embeddings = await Promise.all(batch.map(c => embedText(c)))
+  // Embed všechny chunky najednou (Cohere dávkuje po 96)
+  const embeddings = await embedChunks(allowedChunks)
 
-    await db.from('chunks').insert(
-      batch.map((content, j) => ({
-        document_id: doc.id,
-        chatbot_id: chatbotId,
-        content,
-        embedding: JSON.stringify(embeddings[j]),
-      }))
-    )
-  }
+  await db.from('chunks').insert(
+    allowedChunks.map((content, i) => ({
+      document_id: doc.id,
+      chatbot_id: chatbotId,
+      content,
+      embedding: JSON.stringify(embeddings[i]),
+    }))
+  )
 
   triggerWebhooks(userId, 'document.uploaded', {
     document_id: doc.id,

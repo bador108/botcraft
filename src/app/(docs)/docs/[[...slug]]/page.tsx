@@ -185,8 +185,8 @@ BotCraft umí zpracovat tyto typy souborů:
 
 1. Soubor se nahraje a text se extrahuje
 2. Text se rozdělí na chunky (~2000 znaků s překryvem)
-3. Každý chunk se embeduje přes OpenAI text-embedding-3-small
-4. Embeddingy se uloží do Supabase (pgvector)
+3. Každý chunk se převede na vektorovou reprezentaci (multilingual embedding model s podporou češtiny)
+4. Embeddingy se uloží do vektorové databáze
 5. Při chatu se vektorově vyhledají nejrelevantnější chunky
 
 ## Tipy pro lepší výsledky

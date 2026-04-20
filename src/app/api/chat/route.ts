@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { streamText } from 'ai'
 import { createServiceClient } from '@/lib/supabase'
 import { groq } from '@/lib/groq'
-import { embedText } from '@/lib/openai'
+import { embedQuery } from '@/lib/documents/embed'
 import { PLAN_LIMITS } from '@/lib/plans'
 import { getCachedResponse, setCachedResponse } from '@/lib/cache'
 import { checkRateLimit } from '@/lib/rate-limit'
@@ -112,7 +112,7 @@ export async function POST(req: Request) {
     if (lastUserMessage) {
       try {
         if (limits.rag_enabled) {
-          const embedding = await embedText(lastUserMessage.content)
+          const embedding = await embedQuery(lastUserMessage.content)
           const { data: chunks } = await db.rpc('match_chunks', {
             query_embedding: JSON.stringify(embedding),
             match_chatbot_id: botId,
