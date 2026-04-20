@@ -4,11 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "docs:gen": "node ./node_modules/fumadocs-mdx/dist/bin.js",
-    "build": "npm run docs:gen && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "npm run docs:gen && node ./node_modules/typescript/bin/tsc --noEmit"
+    "typecheck": "node ./node_modules/typescript/bin/tsc --noEmit"
   },
   "dependencies": {
     "@ai-sdk/groq": "^3.0.35",
