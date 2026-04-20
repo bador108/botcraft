@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import 'fumadocs-ui/css/neutral.css';
-@import 'fumadocs-ui/css/preset.css';
 
 /* Landing page â€” bone/ink workbench theme */
 :root {
