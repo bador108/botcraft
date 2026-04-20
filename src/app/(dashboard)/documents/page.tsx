@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
-import { Button } from '@/components/ui/button'
 import {
   FileText, Upload, Trash2, Loader2, AlertCircle, Search, CheckCircle2,
 } from 'lucide-react'

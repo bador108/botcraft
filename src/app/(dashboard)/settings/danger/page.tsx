@@ -1,11 +1,9 @@
 'use client'
 
-import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { AlertTriangle } from 'lucide-react'
 
 export default function DangerSettings() {
-  const [confirm, setConfirm] = useState('')
 
   return (
     <div className="space-y-6">
