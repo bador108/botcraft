@@ -4,9 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "docs:gen": "node ./node_modules/fumadocs-mdx/dist/bin.js",
+    "build": "npm run docs:gen && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "typecheck": "npm run docs:gen && node ./node_modules/typescript/bin/tsc --noEmit"
   },
   "dependencies": {
     "@ai-sdk/groq": "^3.0.35",
@@ -16,7 +18,11 @@
     "ai": "^6.0.158",
     "clsx": "^2.1.1",
     "framer-motion": "^12.38.0",
+    "fumadocs-core": "15.2.14",
+    "fumadocs-mdx": "^14.3.1",
+    "fumadocs-ui": "15.2.11",
     "lucide-react": "^1.8.0",
+    "mammoth": "^1.12.0",
     "next": "14.2.35",
     "openai": "^6.34.0",
     "pdf-parse": "^2.4.5",
@@ -35,7 +41,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.2.35",
     "postcss": "^8",
-    "tailwindcss": "^3.4.1",
+    "tailwindcss": "^3.4.14",
     "typescript": "^5"
   }
 }

@@ -1,0 +1,59 @@
+---
+title: Podporované formáty
+description: Jaké soubory lze nahrát do knowledge base
+---
+
+# Podporované formáty
+
+BotCraft umí zpracovat tyto typy souborů:
+
+| Formát | Přípona | Poznámka |
+|--------|---------|----------|
+| PDF | `.pdf` | Textové PDF — naskenované bez OCR nefungují |
+| Prostý text | `.txt` | UTF-8 kódování |
+| Markdown | `.md` | Formátování se ignoruje, zpracovává se čistý text |
+| Word dokument | `.docx` | Pouze moderní formát DOCX, starý DOC není podporován |
+
+**Maximální velikost souboru:** 10 MB
+
+## Tipy pro nejlepší výsledky
+
+### Co nahrávat
+- **FAQ soubory** — každá otázka s odpovědí jako odstavec
+- **Produktová dokumentace** — technické popisy, specifikace
+- **Návody a postupy** — krok za krokem
+- **Cenové listy** — strukturovaný text, ne obrázky tabulek
+
+### Co nenahrávat
+- **Naskenované dokumenty** — obrázky textu, bot nedokáže přečíst
+- **Dokumenty s majoritou obrázků** — grafy, fotky, prezentace
+- **Příliš velké soubory bez relevantního obsahu** — 200stránkový výroční dokument, ze kterého potřebuješ 3 stránky
+
+### Jak strukturovat obsah
+
+Dobře strukturovaný text = lepší odpovědi. Používej:
+
+```markdown
+## Název sekce
+
+Obsah sekce...
+
+## Další sekce
+
+Obsah...
+```
+
+Odstavce oddělené prázdným řádkem se zpracovávají jako samostatné chunky — bot pak lépe vybere relevantní část.
+
+## Limity podle plánu
+
+| Plán | Dokumentů / chatbot | RAG |
+|------|---------------------|-----|
+| Hobby | 1 | ❌ (stuffed context) |
+| Maker | 20 | ✅ |
+| Studio | Neomezeno | ✅ |
+| Enterprise | Neomezeno | ✅ |
+
+<Callout type="info">
+  Na Hobby plánu se celý obsah dokumentu vloží do kontextu (stuffed context). RAG (vektorové vyhledávání) je dostupné od Maker plánu.
+</Callout>

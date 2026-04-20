@@ -43,6 +43,15 @@ export async function extractTextFromFile(
     const data = await pdfParse(buffer)
     return data.text
   }
+  if (
+    mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+    filename.endsWith('.docx')
+  ) {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const mammoth = require('mammoth')
+    const result = await mammoth.extractRawText({ buffer })
+    return result.value
+  }
   // TXT / MD — decode as UTF-8
   return buffer.toString('utf-8')
 }

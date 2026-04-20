@@ -1,0 +1,13 @@
+{
+  "title": "BotCraft Docs",
+  "pages": [
+    "index",
+    "quickstart",
+    "---Chatboti---",
+    "chatbots",
+    "---Dokumenty---",
+    "documents",
+    "---Integrace---",
+    "embed"
+  ]
+}

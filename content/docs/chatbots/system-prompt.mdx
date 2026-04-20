@@ -1,0 +1,66 @@
+---
+title: System prompt
+description: Jak napsat dobrý system prompt pro chatbota
+---
+
+# System prompt
+
+System prompt je instrukce, která definuje charakter a chování bota. Je to nejdůležitější věc, na které záleží kvalita odpovědí.
+
+## Struktura dobrého promptu
+
+```
+Jsi [role] pro [firma/produkt].
+[Popis chování a tónu]
+[Co má/nemá dělat]
+[Jak má eskalovat neznámé dotazy]
+```
+
+### Příklad — zákaznická podpora
+
+```
+Jsi přátelský zákaznický asistent firmy Acme s.r.o.
+Odpovídáš stručně a věcně, vždy v češtině.
+Vycházíš z informací v knowledge base.
+Pokud odpověď nenajdeš v dokumentech, přiznej to a doporuč
+zákazníkovi napsat na support@acme.cz nebo zavolat 800 123 456.
+Nikdy neslibuj věci, které nevíš. Neodpovídej na témata mimo
+produkty a služby Acme.
+```
+
+### Příklad — technická dokumentace
+
+```
+Jsi technický asistent pro vývojáře pracující s API XYZ.
+Odpovídáš technicky přesně, uvádíš příklady kódu kde je to vhodné.
+Pracuješ výhradně s informacemi z dokumentace.
+Pokud chybí context, zeptej se na upřesnění.
+```
+
+## Doporučení
+
+**Definuj jazyk.** Pokud chceš odpovědi v češtině, explicitně to napiš — jinak bot může reagovat v jazyce dotazu.
+
+**Nastav eskalaci.** Vždy specifikuj, co má bot dělat, když nezná odpověď. „Doporuč zákazníkovi napsat na X" je lepší než tiché „Nevím."
+
+**Omezte téma.** „Odpovídej pouze na dotazy týkající se [X]" zabrání odbočkám.
+
+**Definuj tón.** „Formálně/přátelsky/technicky" — AI tón přizpůsobí.
+
+## Časté chyby
+
+❌ **Příliš krátký prompt** — „Odpovídej na otázky" nestačí.
+
+❌ **Bez eskalace** — bot pak vymýšlí odpovědi, které nezná.
+
+❌ **Bez omezení tématu** — bot se nechá odvést na témata mimo tvůj produkt.
+
+❌ **Konfliktní instrukce** — „Buď stručný. Odpovídej detailně." — musíš se rozhodnout.
+
+## Testování
+
+Po uložení promptu ho ihned otestuj:
+1. Klikni na **Náhled** v detailu chatbota
+2. Zkus dotazy, na které bot má znát odpověď (z dokumentů)
+3. Zkus dotazy mimo téma — ověř, že bot správně odmítá nebo eskaluje
+4. Zkus dotaz v cizím jazyce — ověř jazyk odpovědi

@@ -1,0 +1,54 @@
+---
+title: Vytvoření chatbota
+description: Jak vytvořit a nakonfigurovat nového chatbota
+---
+
+# Vytvoření chatbota
+
+## Nový chatbot
+
+1. V dashboardu přejdi na **Chatboti**
+2. Klikni na **+ Nový chatbot**
+3. Vyplň základní informace a ulož
+
+## Povinná nastavení
+
+### Název
+Interní název — vidíš ho jen ty v dashboardu. Může být libovolný.
+
+### System prompt
+Nejdůležitější nastavení. Definuje chování, tón a omezení bota. Viz [Jak napsat dobrý system prompt](/docs/chatbots/system-prompt).
+
+### Welcome zpráva
+První zpráva, kterou bot odešle hned po otevření widgetu.
+
+Příklady:
+- „Ahoj! Jak ti mohu pomoci?"
+- „Vítej v podpoře XYZ. Na co se chceš zeptat?"
+- „Dobrý den! Jsem asistent pro [téma]. Ptej se na cokoliv."
+
+## Volitelná nastavení
+
+### Model
+Výběr AI modelu — Fast, Balanced nebo Premium. Viz [Volba modelu](/docs/chatbots/models).
+
+### Barva widgetu
+Přizpůsob barvu tlačítka a headeru widgetu svému brandu. Funguje v libovolném hex kódu (`#FF6B35`, `#2563EB` apod.).
+
+### Povolené domény
+Pokud chceš omezit, na jakých webech může widget fungovat:
+
+```
+firma.cz
+app.firma.cz
+```
+
+Ponech prázdné pro neomezený přístup (výchozí).
+
+## Knowledge base
+
+Po vytvoření chatbota přejdi na záložku **Dokumenty** v detailu bota a nahraj soubory, ze kterých má čerpat. Dokumenty lze nahrát také globálně přes **Dokumenty** v hlavním menu.
+
+<Callout type="info">
+  Dokumenty se zpracovávají automaticky — text se rozdělí na chunky a vytvoří se embeddingy pro vyhledávání.
+</Callout>

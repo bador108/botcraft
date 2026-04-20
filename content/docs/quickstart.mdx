@@ -1,0 +1,64 @@
+---
+title: Quickstart
+description: Postav si prvního chatbota za 5 minut
+---
+
+# Quickstart
+
+Projdeš si celý flow od nuly po funkční chatbot na webu. Cíl: 5 minut.
+
+## 1. Vytvoř účet
+
+[Zaregistruj se](/sign-up) — stačí email nebo Google/GitHub login. Dostaneš **Hobby plán zdarma**: 1 chatbot, 50 zpráv měsíčně, 1 dokument.
+
+## 2. Nahraj dokument
+
+V dashboardu klikni na **Dokumenty** → přetáhni PDF, TXT nebo Markdown.
+
+**Nejlepší výsledky** má:
+- FAQ soubor (otázka + odpověď na každém řádku)
+- Produktová dokumentace
+- Pomocné články
+
+**Horší výsledky** dostaneš z:
+- Naskenovaných PDF bez OCR
+- Dokumentů s hodně tabulkami bez kontextu
+- Příliš obecných textů (marketing materiály)
+
+## 3. Vytvoř chatbota
+
+**Chatboti** → **+ Nový chatbot**.
+
+Vyplň:
+- **Název**: „FAQ Bot" nebo cokoliv ti vyhovuje
+- **System prompt**: „Jsi asistent firmy XYZ. Odpovídáš stručně a přátelsky v češtině. Pokud nevíš, řekni, ať zákazník napíše na support@firma.cz."
+- **Welcome zpráva**: „Ahoj! Jak ti můžu pomoct?"
+- **Model**: začni s **Fast** — je nejrychlejší a na FAQ stačí
+
+Přiřaď dokument, který jsi nahrál v kroku 2.
+
+## 4. Embed na web
+
+Klikni na **Embed** v detailu bota. Dostaneš kód podobný:
+
+```html
+<script
+  src="https://botcraft.app/widget.js"
+  data-bot-id="abc123..."
+  async
+></script>
+```
+
+Zkopíruj a vlož **před `</body>`** tag svého webu.
+
+## 5. Hotovo
+
+Obnov svůj web. V pravém dolním rohu se objeví chat ikona. Klikni a zkus dotaz, na který by bot měl umět odpovědět z nahraných dokumentů.
+
+---
+
+## Co dál?
+
+- [Jak napsat dobrý system prompt](/docs/chatbots/system-prompt) — nejdůležitější část konfigurace
+- [Volba modelu](/docs/chatbots/models) — kdy použít Fast vs. Balanced vs. Premium
+- [Embed customizace](/docs/embed/script-tag) — jak vložit widget a upravit jeho vzhled

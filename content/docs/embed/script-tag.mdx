@@ -1,0 +1,67 @@
+---
+title: Embed — Script tag
+description: Jak vložit chatbot widget na web pomocí script tagu
+---
+
+# Embed — Script tag
+
+Nejjednodušší způsob integrace. Stačí jeden řádek HTML.
+
+## Základní integrace
+
+```html
+<script
+  src="https://botcraft.app/widget.js"
+  data-bot-id="TVŮJ_BOT_ID"
+  async
+></script>
+```
+
+Vlož **před `</body>`** tag na každé stránce, kde chceš widget zobrazit. Bot ID najdeš v detailu chatbota pod záložkou **Embed**.
+
+## Atributy
+
+| Atribut | Povinný | Popis |
+|---------|---------|-------|
+| `data-bot-id` | ✅ Ano | ID chatbota z dashboardu |
+| `data-position` | Ne | `bottom-right` (výchozí) nebo `bottom-left` |
+| `data-color` | Ne | Barva tlačítka, např. `#FF6B35` — přebíjí nastavení z dashboardu |
+
+### Příklad s atributy
+
+```html
+<script
+  src="https://botcraft.app/widget.js"
+  data-bot-id="abc123"
+  data-position="bottom-left"
+  data-color="#2563EB"
+  async
+></script>
+```
+
+## WordPress
+
+1. Přejdi do **Vzhled → Editor → footer.php** (nebo přes plugin Insert Headers and Footers)
+2. Vlož script tag před `</body>`
+3. Ulož
+
+## Webflow
+
+1. Otevři **Project Settings → Custom Code**
+2. Vlož script tag do sekce **Footer Code**
+3. Publikuj
+
+## Shopify
+
+1. V admin přejdi na **Online Store → Themes → Edit code**
+2. Otevři `theme.liquid`
+3. Vlož script tag před `</body>`
+
+## Squarespace
+
+1. Přejdi do **Settings → Advanced → Code Injection**
+2. Vlož script tag do pole **Footer**
+
+<Callout type="warning">
+  Widget funguje na doménách, které povolíš v nastavení chatbota (pole **Povolené domény**). Pokud je pole prázdné, widget funguje odkudkoliv.
+</Callout>

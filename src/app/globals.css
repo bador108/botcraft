@@ -2,7 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Landing page — bone/ink workbench theme */
+@import 'fumadocs-ui/css/neutral.css';
+@import 'fumadocs-ui/css/preset.css';
+
+/* Landing page â€” bone/ink workbench theme */
 :root {
   --bg:      #F5F1EA;
   --surface: #EDE7DC;
@@ -13,7 +16,7 @@
   --font-display: var(--font-mono);
 }
 
-/* Dashboard dark theme — applied by wrapping layout */
+/* Dashboard dark theme â€” applied by wrapping layout */
 .dark {
   --bg:      #09090B;
   --surface: #0E0E12;
@@ -51,7 +54,7 @@
 .animate-fade-up-3 { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.16s both; }
 .animate-fade-up-4 { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.24s both; }
 
-/* ── Prose styles for content pages ─────────────────────────────────────── */
+/* â”€â”€ Prose styles for content pages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .prose-content { @apply text-zinc-400; }
 
