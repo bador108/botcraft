@@ -67,6 +67,7 @@ export interface PlanLimits {
   custom_branding?: boolean
   remove_badge?: boolean
   custom_domain?: boolean
+  api_keys?: boolean
   webhooks?: boolean
   ab_testing?: boolean
   team_seats?: number

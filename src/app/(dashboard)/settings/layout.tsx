@@ -4,11 +4,13 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
-const TABS = [
+const TABS: { href: string; label: string; badge?: string }[] = [
   { href: '/settings', label: 'Profil' },
   { href: '/settings/security', label: 'Bezpečnost' },
   { href: '/settings/notifications', label: 'Notifikace' },
-  { href: '/settings/data', label: 'Data & Export', badge: 'brzy' },
+  { href: '/settings/api-keys', label: 'API klíče' },
+  { href: '/settings/webhooks', label: 'Webhooky' },
+  { href: '/settings/data', label: 'Data & Export' },
   { href: '/settings/danger', label: 'Nebezpečná zóna' },
 ]
 

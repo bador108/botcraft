@@ -1,6 +1,7 @@
 {
   "crons": [
     { "path": "/api/cron/retention", "schedule": "0 3 * * *" },
-    { "path": "/api/cron/weekly-summary", "schedule": "0 9 * * 1" }
+    { "path": "/api/cron/weekly-summary", "schedule": "0 9 * * 1" },
+    { "path": "/api/cron/delete-accounts", "schedule": "0 4 * * *" }
   ]
 }

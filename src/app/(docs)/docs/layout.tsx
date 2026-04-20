@@ -15,7 +15,15 @@ const NAV = [
   { href: '/docs/embed/customization', label: 'Customizace widgetu' },
   { href: '/docs/embed/javascript-api', label: 'JavaScript API' },
   { href: '/docs/analytics/overview', label: 'Metriky', section: 'Analytika' },
+  { href: '/docs/api/authentication', label: 'Autentizace', section: 'REST API' },
+  { href: '/docs/api/endpoints', label: 'Endpointy' },
+  { href: '/docs/api/rate-limits', label: 'Rate limiting' },
+  { href: '/docs/webhooks/overview', label: 'Přehled webhooků', section: 'Webhooky' },
+  { href: '/docs/webhooks/events', label: 'Události' },
+  { href: '/docs/webhooks/signatures', label: 'Ověření podpisu' },
   { href: '/docs/troubleshooting/bot-wrong-answers', label: 'Špatné odpovědi', section: 'Troubleshooting' },
+  { href: '/docs/troubleshooting/widget-not-showing', label: 'Widget se nezobrazí' },
+  { href: '/docs/troubleshooting/rate-limits', label: 'Rate limit chyby' },
 ]
 
 export default function DocsRootLayout({ children }: { children: ReactNode }) {

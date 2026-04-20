@@ -8,6 +8,7 @@ import { getCachedResponse, setCachedResponse } from '@/lib/cache'
 import { checkRateLimit } from '@/lib/rate-limit'
 import { getCurrentUsage, incrementUsage } from '@/lib/usage'
 import { notifyOwnerOfLimit } from '@/lib/notifications'
+import { triggerWebhooks } from '@/lib/webhooks/send'
 import type { User, ChatMessage, Plan } from '@/types'
 
 export const runtime = 'nodejs'
@@ -193,6 +194,12 @@ export async function POST(req: Request) {
         db.from('chatbots').update({ message_count_month: bot.message_count_month + 1 }).eq('id', botId),
         db.from('users').update({ message_count_month: (user as User).message_count_month + 1 }).eq('id', bot.user_id),
       ]).catch(() => {})
+      triggerWebhooks(bot.user_id, 'message.created', {
+        chatbot_id: botId,
+        session_id: sessionId,
+        user_message: lastUserMessage?.content ?? '',
+        assistant_message: responseText,
+      }).catch(() => {})
     })
 
     return result.toTextStreamResponse({ headers: { ...CORS, 'X-Session-Id': sessionId } })

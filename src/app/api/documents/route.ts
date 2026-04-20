@@ -4,6 +4,7 @@ import { createServiceClient } from '@/lib/supabase'
 import { PLAN_LIMITS } from '@/lib/plans'
 import { chunkText, extractTextFromFile } from '@/lib/rag'
 import { embedText } from '@/lib/openai'
+import { triggerWebhooks } from '@/lib/webhooks/send'
 import type { User } from '@/types'
 
 export async function GET(req: Request) {
@@ -129,6 +130,13 @@ export async function POST(req: Request) {
       }))
     )
   }
+
+  triggerWebhooks(userId, 'document.uploaded', {
+    document_id: doc.id,
+    name: docName,
+    chatbot_id: chatbotId,
+    chunks: allowedChunks.length,
+  }).catch(() => {})
 
   return NextResponse.json(doc, { status: 201 })
 }

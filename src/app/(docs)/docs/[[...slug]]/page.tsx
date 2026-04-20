@@ -133,24 +133,24 @@ Pokud nevíš odpověď, řekni to upřímně a navrhni kontakt na podporu.
     body: `
 BotCraft nabízí tři úrovně AI modelů:
 
-## Fast — Llama 3.1 8B
+## Fast
 
 - Nejrychlejší odpovědi (~0.5s)
 - Dostupný na všech plánech
 - Ideální pro jednoduché FAQ a zákaznické chaty
 - Nižší náklady
 
-## Balanced — Llama 3.3 70B
+## Balanced
 
 - Dobrý poměr rychlost/kvalita
 - Pro střední složitost dotazů
-- Dostupný od Pro plánu
+- Dostupný od Maker plánu
 
-## Premium — DeepSeek R1 70B
+## Premium
 
 - Nejkvalitnější odpovědi
 - Reasoning model — lepší na složité dotazy
-- Dostupný od Pro plánu
+- Dostupný od Studio plánu
 - Pomalejší (~2–5s)
 
 ## Jak vybrat
@@ -469,6 +469,465 @@ Je prompt dostatečně konkrétní? Nedává botovi příliš volnosti?
 ## Reset knowledge base
 
 Smaž dokumenty → nahraj je znovu. Tím se přeindexují embeddingy.
+    `,
+  },
+  'api/authentication': {
+    title: 'API — Autentizace',
+    description: 'Jak se autentizovat k BotCraft REST API pomocí API klíčů',
+    body: `
+BotCraft REST API používá Bearer token autentizaci. API klíče vytvoříš v **Nastavení → API klíče** (dostupné od plánu Studio).
+
+## Vytvoření API klíče
+
+1. Přejdi do **Nastavení → API klíče**
+2. Klikni na **Vytvořit**
+3. Zadej název a vyber scope (\`read\` nebo \`read + write\`)
+4. Klíč se zobrazí **jedinkrát** — ulož ho do bezpečného místa
+
+## Použití v requestech
+
+Přidej hlavičku \`Authorization\` s prefixem \`Bearer\`:
+
+\`\`\`bash
+curl https://botcraft.app/api/v1/chatbots \\
+  -H "Authorization: Bearer sk_bc_live_..."
+\`\`\`
+
+\`\`\`typescript
+const res = await fetch('https://botcraft.app/api/v1/chatbots', {
+  headers: {
+    Authorization: \`Bearer \${process.env.BOTCRAFT_API_KEY}\`,
+  },
+})
+const { chatbots } = await res.json()
+\`\`\`
+
+## Scopy
+
+| Scope | Co povoluje |
+|-------|-------------|
+| \`read\` | GET requesty — čtení chatbotů, zpráv |
+| \`write\` | PATCH requesty — úprava chatbotů |
+
+## Formát klíče
+
+Všechny klíče začínají prefixem \`sk_bc_live_\`. Nikdy nezveřejňuj klíč v client-side kódu.
+
+## Revokace
+
+Klíč kdykoli zrevokuješ v **Nastavení → API klíče** → ikona smazání. Revokace je okamžitá.
+    `,
+  },
+  'api/endpoints': {
+    title: 'API — Endpointy',
+    description: 'Přehled všech dostupných REST API endpointů',
+    body: `
+Base URL: \`https://botcraft.app/api/v1\`
+
+## Chatboti
+
+### GET /chatbots
+
+Vrátí seznam všech chatbotů autentizovaného uživatele.
+
+\`\`\`bash
+GET /api/v1/chatbots
+Authorization: Bearer sk_bc_live_...
+\`\`\`
+
+**Response:**
+\`\`\`json
+{
+  "chatbots": [
+    {
+      "id": "uuid",
+      "name": "Můj chatbot",
+      "model": "balanced",
+      "is_active": true,
+      "welcome_message": "Dobrý den!",
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  ]
+}
+\`\`\`
+
+### GET /chatbots/:id
+
+Detail konkrétního chatbota.
+
+\`\`\`bash
+GET /api/v1/chatbots/uuid
+Authorization: Bearer sk_bc_live_...
+\`\`\`
+
+### PATCH /chatbots/:id
+
+Aktualizace chatbota (vyžaduje scope \`write\`).
+
+\`\`\`bash
+PATCH /api/v1/chatbots/uuid
+Authorization: Bearer sk_bc_live_...
+Content-Type: application/json
+
+{
+  "name": "Nový název",
+  "is_active": false
+}
+\`\`\`
+
+Povolené fieldy: \`name\`, \`system_prompt\`, \`welcome_message\`, \`is_active\`, \`model\`.
+
+### GET /chatbots/:id/messages
+
+Konverzace chatbota se stránkováním.
+
+\`\`\`bash
+GET /api/v1/chatbots/uuid/messages?limit=100&offset=0
+Authorization: Bearer sk_bc_live_...
+\`\`\`
+
+**Query parametry:**
+
+| Parametr | Default | Max |
+|----------|---------|-----|
+| \`limit\` | 100 | 1000 |
+| \`offset\` | 0 | — |
+
+**Response:**
+\`\`\`json
+{
+  "messages": [...],
+  "total": 1234,
+  "limit": 100,
+  "offset": 0
+}
+\`\`\`
+
+## HTTP chybové kódy
+
+| Kód | Popis |
+|-----|-------|
+| 401 | Chybí nebo neplatný API klíč |
+| 403 | Nedostatečný scope |
+| 404 | Zdroj neexistuje nebo nepatří tobě |
+| 429 | Rate limit překročen |
+| 500 | Interní chyba |
+    `,
+  },
+  'api/rate-limits': {
+    title: 'API — Rate limiting',
+    description: 'Limity požadavků pro REST API',
+    body: `
+REST API má stejné rate limity jako chat endpointy — závisí na tvém plánu.
+
+## Limity dle plánu
+
+| Plán | Requesty / 60 s |
+|------|-----------------|
+| Studio | 100 |
+| Enterprise | 500 |
+
+## Hlavičky odpovědi
+
+Každý response obsahuje hlavičky o aktuálním stavu limitu:
+
+\`\`\`
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 87
+X-RateLimit-Reset: 1714560000
+\`\`\`
+
+## Překročení limitu
+
+Při překročení API vrátí **HTTP 429** s tělem:
+
+\`\`\`json
+{ "error": "Rate limit exceeded" }
+\`\`\`
+
+## Doporučení
+
+- Cachuj odpovědi lokálně kde to dává smysl
+- Exponential backoff při 429
+- Dávkuj requesty — jeden GET /chatbots místo N GET /chatbots/:id
+    `,
+  },
+  'webhooks/overview': {
+    title: 'Webhooky — Přehled',
+    description: 'Jak fungují BotCraft webhooky pro real-time notifikace',
+    body: `
+Webhooky ti umožní reagovat na události v BotCraft v reálném čase — nová zpráva od uživatele, nahraný dokument, dosažení limitu.
+
+Webhooky jsou dostupné od plánu **Studio**.
+
+## Jak to funguje
+
+1. V **Nastavení → Webhooky** vytvoříš endpoint s URL a výběrem událostí
+2. BotCraft při každé události pošle HTTP POST na tvou URL
+3. Tvůj server zpracuje payload a vrátí HTTP 2xx
+
+## Payload struktura
+
+\`\`\`json
+{
+  "event": "message.created",
+  "data": {
+    "chatbot_id": "uuid",
+    "session_id": "uuid",
+    "user_message": "Jak funguje vrácení zboží?",
+    "assistant_message": "Zboží lze vrátit do 14 dní..."
+  },
+  "timestamp": "2026-04-20T10:30:00Z"
+}
+\`\`\`
+
+## Spolehlivost
+
+- Timeout požadavku: **10 sekund**
+- Bez opakování — pokud server neodpoví, doručení se nezopakuje
+- Po **10 po sobě jdoucích selháních** se webhook automaticky deaktivuje
+- Historii posledních 50 doručení najdeš v nastavení → klikni **Doručení**
+
+## Test
+
+V nastavení webhooků klikni na tlačítko **Test** (►) — odešle testovací payload s první událostí.
+    `,
+  },
+  'webhooks/events': {
+    title: 'Webhooky — Události',
+    description: 'Přehled všech webhookových událostí a jejich payloadů',
+    body: `
+## message.created
+
+Nová zpráva uživatele a odpověď chatbota.
+
+\`\`\`json
+{
+  "event": "message.created",
+  "data": {
+    "chatbot_id": "uuid",
+    "session_id": "uuid",
+    "user_message": "dotaz uživatele",
+    "assistant_message": "odpověď chatbota"
+  },
+  "timestamp": "2026-04-20T10:30:00Z"
+}
+\`\`\`
+
+## document.uploaded
+
+Nový dokument byl nahrán a zpracován.
+
+\`\`\`json
+{
+  "event": "document.uploaded",
+  "data": {
+    "document_id": "uuid",
+    "name": "manual.pdf",
+    "chatbot_id": "uuid",
+    "chunks": 42
+  },
+  "timestamp": "2026-04-20T10:30:00Z"
+}
+\`\`\`
+
+## chatbot.updated
+
+Konfigurace chatbota byla změněna (přes API PATCH).
+
+\`\`\`json
+{
+  "event": "chatbot.updated",
+  "data": {
+    "chatbot_id": "uuid",
+    "changes": ["name", "system_prompt"]
+  },
+  "timestamp": "2026-04-20T10:30:00Z"
+}
+\`\`\`
+
+## document.deleted
+
+Dokument byl smazán.
+
+\`\`\`json
+{
+  "event": "document.deleted",
+  "data": {
+    "document_id": "uuid",
+    "chatbot_id": "uuid"
+  },
+  "timestamp": "2026-04-20T10:30:00Z"
+}
+\`\`\`
+
+## limit.reached
+
+Chatbot dosáhl měsíčního limitu zpráv.
+
+\`\`\`json
+{
+  "event": "limit.reached",
+  "data": {
+    "user_id": "user_xxx",
+    "plan": "maker",
+    "limit": 4000
+  },
+  "timestamp": "2026-04-20T10:30:00Z"
+}
+\`\`\`
+    `,
+  },
+  'webhooks/signatures': {
+    title: 'Webhooky — Ověření podpisu',
+    description: 'Jak ověřit, že webhook přišel od BotCraft',
+    body: `
+Každý webhook request obsahuje hlavičku \`X-BotCraft-Signature\` s HMAC-SHA256 podpisem těla requestu.
+
+## Formát
+
+\`\`\`
+X-BotCraft-Signature: sha256=a1b2c3d4...
+X-BotCraft-Event: message.created
+\`\`\`
+
+## Ověření (Node.js)
+
+\`\`\`typescript
+import crypto from 'crypto'
+
+function verifyWebhook(rawBody: string, signature: string, secret: string): boolean {
+  const expected = \`sha256=\${crypto
+    .createHmac('sha256', secret)
+    .update(rawBody)
+    .digest('hex')}\`
+
+  // Použij timingSafeEqual pro ochranu před timing attacks
+  return crypto.timingSafeEqual(
+    Buffer.from(signature),
+    Buffer.from(expected)
+  )
+}
+
+// Express.js příklad
+app.post('/webhook', express.raw({ type: 'application/json' }), (req, res) => {
+  const sig = req.headers['x-botcraft-signature'] as string
+  const valid = verifyWebhook(req.body.toString(), sig, process.env.WEBHOOK_SECRET!)
+
+  if (!valid) return res.status(401).send('Invalid signature')
+
+  const payload = JSON.parse(req.body.toString())
+  // zpracuj událost...
+
+  res.sendStatus(200)
+})
+\`\`\`
+
+## Kde najdu secret?
+
+Secret se zobrazí **jedinkrát** při vytvoření webhooku. Ulož ho jako env proměnnou.
+
+Pokud secret ztratíš, smaž webhook a vytvoř nový.
+
+## Důležité
+
+- Vždy ověřuj podpis — bez ověření může kdokoli posílat falešné requesty
+- Použij \`timingSafeEqual\` místo \`===\` — chrání před timing attacks
+- Raw body před parsováním — podpis je nad raw body, ne nad parsed JSON
+    `,
+  },
+  'troubleshooting/widget-not-showing': {
+    title: 'Widget se nezobrazí',
+    description: 'Jak diagnostikovat a opravit nefungující widget',
+    body: `
+## Nejčastější příčiny
+
+**1. Chatbot je neaktivní**
+
+Dashboard → Chatboti → zkontroluj přepínač **Aktivní**. Widget se zobrazí pouze pro aktivní boty.
+
+**2. Špatné Bot ID**
+
+Zkontroluj \`data-bot-id\` v script tagu — musí přesně odpovídat ID z dashboardu (UUID formát).
+
+**3. Blokovaná doména**
+
+Pokud máš nastaven seznam povolených domén (**Allowed domains**), ujisti se, že doména, odkud widget voláš, je v seznamu.
+
+Prázdný seznam = povoleny všechny domény.
+
+**4. Content Security Policy**
+
+Pokud web používá CSP, přidej výjimku:
+
+\`\`\`
+Content-Security-Policy: frame-src https://botcraft.app; script-src https://botcraft.app
+\`\`\`
+
+**5. Script se nenahrál**
+
+Otevři DevTools → Network → hledej \`widget.js\`. Pokud 404 nebo error, zkontroluj URL scriptu.
+
+## Debugování v konzoli
+
+\`\`\`javascript
+// Spusť v konzoli prohlížeče na stránce s widgetem
+document.querySelector('[data-bot-id]')  // Najde script tag
+\`\`\`
+
+## Widget je viditelný ale nic neposílá
+
+Zkontroluj DevTools → Console pro JavaScript chyby. Zkontroluj Network → požadavky na \`/api/chat\`.
+    `,
+  },
+  'troubleshooting/rate-limits': {
+    title: 'Rate limit chyby',
+    description: 'Co dělat při překročení rate limitů',
+    body: `
+## Typy rate limitů
+
+BotCraft má dva typy limitů:
+
+**1. Chat rate limit** — počet zpráv za 60 sekund (per chatbot vlastník)
+
+| Plán | Limit |
+|------|-------|
+| Hobby | 5 / 60 s |
+| Maker | 30 / 60 s |
+| Studio | 100 / 60 s |
+| Enterprise | 500 / 60 s |
+
+**2. Měsíční limit zpráv** — celkový počet zpráv za měsíc
+
+## Symptomy
+
+- Chat vrátí zprávu: *"Příliš mnoho zpráv najednou. Zkus to za chvíli znovu."*
+- HTTP 429 na chat nebo API endpointech
+- Widget zobrazí upozornění o limitu
+
+## Řešení
+
+**Rate limit (dočasné)**
+- Počkej 60 sekund — limit se obnoví
+- Snižte počet souběžných requestů
+
+**Měsíční limit**
+- Upgraduj plán v **Billing**
+- Limit se obnoví 1. dne příštího měsíce
+
+**API rate limit**
+- Implementuj exponential backoff:
+
+\`\`\`typescript
+async function fetchWithRetry(url: string, options?: RequestInit, retries = 3): Promise<Response> {
+  const res = await fetch(url, options)
+  if (res.status === 429 && retries > 0) {
+    await new Promise(r => setTimeout(r, 2 ** (3 - retries) * 1000))
+    return fetchWithRetry(url, options, retries - 1)
+  }
+  return res
+}
+\`\`\`
     `,
   },
   'embed/script-tag': {
