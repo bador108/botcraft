@@ -196,6 +196,281 @@ BotCraft umí zpracovat tyto typy souborů:
 - Odstraň nepotřebné záhlaví, zápatí, stránkování před nahráním
     `,
   },
+  'chatbots/branding': {
+    title: 'Branding',
+    description: 'Vlastní barva, welcome zpráva, avatar chatbota',
+    body: `
+## Barva widgetu
+
+V nastavení chatbota → pole **Barva**. Zadej hex kód (např. \`#2563EB\`).
+Barva se propisuje do chat bubble tlačítka na webu.
+
+## Welcome zpráva
+
+První zpráva, kterou uvidí uživatel po otevření chatu.
+Doporučení: krátká, přátelská, s výzvou k akci.
+
+\`\`\`
+Ahoj! Jsem Marek, asistent Acme s.r.o.
+Jak ti mohu pomoci?
+\`\`\`
+
+## Avatar
+
+V současné verzi je avatar generovaný z initials chatbota.
+Vlastní avatar (URL obrázku) je dostupný od plánu Maker.
+
+## Pozice widgetu
+
+Výchozí: pravý dolní roh. Změna pozice je dostupná přes JavaScript API nebo CSS override.
+
+## Odstranění badge
+
+Na Hobby plánu widget zobrazuje "Powered by BotCraft" badge.
+Od plánu Maker je badge skrytý automaticky.
+    `,
+  },
+  'documents/rag-guide': {
+    title: 'Jak funguje RAG',
+    description: 'Retrieval-Augmented Generation — princip a optimalizace',
+    body: `
+RAG (Retrieval-Augmented Generation) umožňuje chatbotu odpovídat na základě tvých dokumentů, ne jen trénovacích dat.
+
+## Jak to funguje
+
+1. **Indexace** — při nahrání dokumentu BotCraft rozdělí text na chunky (~2000 znaků) a vytvoří pro každý embedding (vektorová reprezentace)
+2. **Vyhledávání** — při každé otázce uživatele BotCraft embeduje dotaz a vyhledá 5 nejpodobnějších chunků (cosine similarity)
+3. **Generování** — relevantní chunky se vloží do kontextu pro AI model, který na jejich základě odpovídá
+
+## Prahová hodnota podobnosti
+
+BotCraft používá prahovou hodnotu **0.3** (z rozsahu 0–1).
+Chunky s podobností pod 0.3 jsou ignorovány — bot označí odpověď jako "bez kontextu".
+
+## Proč bot odpovídá špatně?
+
+- Odpověď není v dokumentech → přidej dokument s danou informací
+- Špatná formulace v dokumentu → přepiš text jasněji
+- Chunk je příliš dlouhý s různými tématy → rozděl dokument
+- Dotaz je příliš vágní → systém nenajde správný chunk
+
+## Limity plánů
+
+| Plán | RAG | Max chunks |
+|------|-----|------------|
+| Hobby | ✗ | 50 |
+| Maker | ✓ | ∞ |
+| Studio | ✓ | ∞ |
+    `,
+  },
+  'documents/best-practices': {
+    title: 'Best practices pro dokumenty',
+    description: 'Jak strukturovat dokumenty pro nejlepší výsledky',
+    body: `
+## Princip: kratší a zaměřené > jeden velký soubor
+
+Jeden dokument = jedno téma. AI najde relevantní informace lépe z 10 malých dokumentů než z jednoho 100stránkového PDF.
+
+## Formátování
+
+- Používej nadpisy (H1, H2) pro strukturu
+- Kratší odstavce (2–4 věty) jsou lepší než bloky textu
+- Bullet pointy jsou snadno indexovatelné
+- Odstraň záhlaví, zápatí, čísla stránek před nahráním
+
+## Jazyk
+
+Dokumenty a dotazy by měly být ve **stejném jazyce**. Česský chatbot + české dokumenty = nejlepší výsledky.
+
+## Co nedělat
+
+- Nenahrávej naskenovaná PDF (jsou obrázky, text nelze extrahovat)
+- Nenahrávej prezentace plné grafů bez textu
+- Nepoužívej zkratky bez vysvětlení
+- Nepřidávej stejnou informaci do více dokumentů (duplikát snižuje přesnost)
+
+## Testování
+
+Po nahrání dokumentu otestuj chatbota v preview:
+1. Zeptej se na konkrétní fakt z dokumentu
+2. Pokud bot neví → přidej informaci explicitněji
+3. Opakuj dokud bot odpovídá správně
+    `,
+  },
+  'embed/customization': {
+    title: 'Customizace widgetu',
+    description: 'Pozice, barvy, CSS override, spouštění widgetu',
+    body: `
+## Výchozí chování
+
+Widget se zobrazí jako plovoucí tlačítko vpravo dole. Po kliknutí se otevře chat okno (iframe).
+
+## Barva
+
+Nastavuje se v dashboardu — propaguje se do tlačítka i hlavičky chatu.
+
+## CSS Override
+
+Widget je vložen jako iframe — nelze přímo stylovat přes CSS.
+Pozici tlačítka lze upravit přes \`window.BotCraft\` API (viz JavaScript API).
+
+## Automatické otevření
+
+\`\`\`html
+<script>
+  window.addEventListener('botcraft:ready', function() {
+    window.BotCraft.open()
+  })
+</script>
+\`\`\`
+
+## Otevření po X sekundách
+
+\`\`\`javascript
+setTimeout(function() {
+  if (window.BotCraft) window.BotCraft.open()
+}, 5000)
+\`\`\`
+
+## Skrytí tlačítka
+
+\`\`\`javascript
+if (window.BotCraft) window.BotCraft.hide()
+\`\`\`
+    `,
+  },
+  'embed/javascript-api': {
+    title: 'JavaScript API',
+    description: 'window.BotCraft API — programatické ovládání widgetu',
+    body: `
+## Dostupné metody
+
+\`\`\`javascript
+// Otevři chat okno
+window.BotCraft.open()
+
+// Zavři chat okno
+window.BotCraft.close()
+
+// Skryj celý widget (tlačítko i okno)
+window.BotCraft.hide()
+
+// Zobraz widget
+window.BotCraft.show()
+
+// Zkontroluj zda je widget načtený
+if (window.BotCraft) { ... }
+\`\`\`
+
+## Event listenery
+
+\`\`\`javascript
+// Widget je připravený
+window.addEventListener('botcraft:ready', function(e) {
+  console.log('BotCraft ready', e.detail.botId)
+})
+
+// Uživatel otevřel chat
+window.addEventListener('botcraft:open', function() {})
+
+// Uživatel zavřel chat
+window.addEventListener('botcraft:close', function() {})
+\`\`\`
+
+## Předvyplnění zprávy
+
+\`\`\`javascript
+window.BotCraft.open({ message: 'Mám otázku ohledně ceny' })
+\`\`\`
+
+## Dostupnost
+
+JavaScript API je dostupné po načtení widget.js skriptu.
+Vždy kontroluj \`if (window.BotCraft)\` před voláním.
+    `,
+  },
+  'analytics/overview': {
+    title: 'Analytika — přehled metrik',
+    description: 'Co znamenají jednotlivé metriky a jak je číst',
+    body: `
+## Zprávy
+
+Počet zpráv odeslaných uživateli chatbotů (nezahrnuje systémové zprávy).
+Dobrý indikátor celkové aktivity.
+
+## Unikátní uživatelé
+
+Počet unikátních session ID. Každá session = jeden unikátní uživatel za jeden návštěvní "sezení".
+Není to přesný count unikátních osob — jeden člověk může mít více sessions (jiný prohlížeč, incognito).
+
+## Prům. odezva
+
+Průměrná doba od odeslání dotazu do přijetí první odpovědi v milisekundách.
+
+| Hodnota | Hodnocení |
+|---------|-----------|
+| < 500 ms | Výborné |
+| 500–1500 ms | Dobré |
+| > 1500 ms | Zpomalení (zkontroluj model) |
+
+## Satisfaction rate
+
+Poměr pozitivních hodnocení (👍) ku všem hodnocením (👍 + 👎).
+Zobrazuje se pouze po 5+ hodnoceních.
+
+## Nezodpovězené dotazy
+
+Dotazy, na které bot nenašel relevantní chunk v knowledge base.
+Indikuje chybějící obsah v dokumentech → přidej chybějící informace.
+
+## Využití modelů
+
+Rozložení chat zpráv podle AI modelu. Pomáhá optimalizovat plán — pokud převažuje Premium model a ty platíš za Maker, zvaž downgrade na Balanced.
+    `,
+  },
+  'troubleshooting/bot-wrong-answers': {
+    title: 'Bot odpovídá špatně',
+    description: 'Jak diagnostikovat a opravit špatné odpovědi chatbota',
+    body: `
+## Diagnóza
+
+**1. Zkontroluj knowledge base**
+
+Otevři chatbota → záložka Dokumenty. Jsou tam relevantní informace k dotazu?
+
+**2. Zkontroluj nezodpovězené dotazy**
+
+Analytika → Nezodpovězené dotazy. Pokud je dotaz tam, bot neměl žádný relevantní chunk.
+
+**3. Zkontroluj system prompt**
+
+Je prompt dostatečně konkrétní? Nedává botovi příliš volnosti?
+
+## Časté problémy
+
+**Bot vymýšlí informace (hallucination)**
+→ Přidej do system promptu: "Pokud nevíš odpověď z poskytnutého kontextu, řekni to upřímně."
+→ Upgraduj na model s lepším reasoning
+
+**Bot ignoruje dokumenty**
+→ Zkontroluj zda jsou dokumenty nahrány a zpracovány (status = Zpracováno)
+→ Zkontroluj zda jsou v dokumentu relevantní odpovědi
+
+**Bot neodpovídá česky**
+→ Přidej do system promptu: "Vždy odpovídej v češtině."
+
+**Bot je příliš stručný / příliš ukecaný**
+→ Uprav system prompt: "Odpovídej stručně, max 3 věty." nebo "Odpovídej detailně."
+
+**Pomalé odpovědi**
+→ Přepni na Fast model
+→ Zkontroluj že dokumenty nejsou zbytečně velké
+
+## Reset knowledge base
+
+Smaž dokumenty → nahraj je znovu. Tím se přeindexují embeddingy.
+    `,
+  },
   'embed/script-tag': {
     title: 'Embed — Script tag',
     description: 'Jak vložit chatbot widget na web pomocí script tagu',

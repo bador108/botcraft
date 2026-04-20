@@ -4,11 +4,18 @@ import type { ReactNode } from 'react'
 const NAV = [
   { href: '/docs', label: 'Úvod' },
   { href: '/docs/quickstart', label: 'Quickstart' },
-  { href: '/docs/chatbots/create', label: 'Vytvoření chatbota' },
+  { href: '/docs/chatbots/create', label: 'Vytvoření chatbota', section: 'Chatboti' },
   { href: '/docs/chatbots/system-prompt', label: 'System prompt' },
   { href: '/docs/chatbots/models', label: 'Volba modelu' },
-  { href: '/docs/documents/formats', label: 'Podporované formáty' },
-  { href: '/docs/embed/script-tag', label: 'Embed — Script tag' },
+  { href: '/docs/chatbots/branding', label: 'Branding' },
+  { href: '/docs/documents/formats', label: 'Podporované formáty', section: 'Dokumenty' },
+  { href: '/docs/documents/rag-guide', label: 'Jak funguje RAG' },
+  { href: '/docs/documents/best-practices', label: 'Best practices' },
+  { href: '/docs/embed/script-tag', label: 'Script tag', section: 'Integrace' },
+  { href: '/docs/embed/customization', label: 'Customizace widgetu' },
+  { href: '/docs/embed/javascript-api', label: 'JavaScript API' },
+  { href: '/docs/analytics/overview', label: 'Metriky', section: 'Analytika' },
+  { href: '/docs/troubleshooting/bot-wrong-answers', label: 'Špatné odpovědi', section: 'Troubleshooting' },
 ]
 
 export default function DocsRootLayout({ children }: { children: ReactNode }) {
@@ -22,13 +29,19 @@ export default function DocsRootLayout({ children }: { children: ReactNode }) {
         <p className="font-mono text-[10px] text-[#A8A8A8] uppercase tracking-widest mb-3">Dokumentace</p>
         <nav className="space-y-0.5">
           {NAV.map(item => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="block px-3 py-1.5 rounded-md text-sm text-[#6B6B6B] hover:text-[#0A0A0A] hover:bg-[#F2F2EF] transition-colors"
-            >
-              {item.label}
-            </Link>
+            <div key={item.href}>
+              {item.section && (
+                <p className="font-mono text-[9px] text-[#A8A8A8] uppercase tracking-widest mt-4 mb-1 px-3">
+                  {item.section}
+                </p>
+              )}
+              <Link
+                href={item.href}
+                className="block px-3 py-1.5 rounded-md text-sm text-[#6B6B6B] hover:text-[#0A0A0A] hover:bg-[#F2F2EF] transition-colors"
+              >
+                {item.label}
+              </Link>
+            </div>
           ))}
         </nav>
       </aside>

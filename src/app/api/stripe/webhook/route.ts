@@ -1,6 +1,8 @@
 ﻿import { NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { createServiceClient } from '@/lib/supabase'
+import { sendEmail } from '@/lib/notifications/send'
+import { failedPaymentHtml } from '@/lib/notifications/templates'
 import type Stripe from 'stripe'
 
 export const runtime = 'nodejs'
@@ -127,6 +129,16 @@ export async function POST(req: Request) {
 
       const userId = sub?.user_id ?? user?.id
       if (!userId) break
+
+      // Notifikace při selhání platby
+      if (event.type === 'invoice.payment_failed' && invoice.hosted_invoice_url) {
+        sendEmail({
+          userId,
+          subject: 'Platba se nezdařila — BotCraft',
+          html: failedPaymentHtml({ invoiceUrl: invoice.hosted_invoice_url }),
+          notificationType: 'failed_payment',
+        }).catch(() => {})
+      }
 
       await db.from('invoices').upsert({
         user_id: userId,
