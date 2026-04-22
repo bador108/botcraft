@@ -45,7 +45,7 @@ export default function LandingPage() {
 
       {/* BotCraft demo widget */}
       {/* eslint-disable-next-line @next/next/no-sync-scripts */}
-      <script src="https://botcraft.vercel.app/widget.js" data-bot-id="d451bea5-221b-48ce-a193-2a919efb1e02" async />
+      <script src="https://botcraft.vercel.app/widget.js" data-bot-id="5bcabdd5-7b14-4e56-869c-51b5378354ec" async />
     </div>
   )
 }

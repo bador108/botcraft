@@ -78,6 +78,15 @@ export default function EmbedPage() {
             </div>
           </div>
 
+          {/* Info: skript je stabilní */}
+          <div className="border border-paper_border rounded-lg p-4 bg-bone space-y-1">
+            <p className="text-xs font-semibold text-ink">Skript není potřeba měnit</p>
+            <p className="text-xs text-muted leading-relaxed">
+              Barva, název, uvítací zpráva a celé nastavení bota se načítají živě z BotCraft při každém otevření stránky.
+              Změníš-li cokoliv v dashboardu, projeví se to na webu automaticky — bez úpravy skriptu.
+            </p>
+          </div>
+
           {appUrl && (
             <a
               href={`${appUrl}/widget/${botId}`}
