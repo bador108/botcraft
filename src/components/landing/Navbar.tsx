@@ -1,13 +1,11 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
-import { useAuth } from '@clerk/nextjs'
 import { Logo } from '@/components/Logo'
+import { NavbarAuth } from './NavbarAuth'
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
-  const { isSignedIn } = useAuth()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -43,31 +41,9 @@ export function Navbar() {
           ))}
         </div>
 
-        {/* Actions — right */}
+        {/* Actions — right (auth-aware client island) */}
         <div className="flex items-center gap-2">
-          {isSignedIn ? (
-            <Link
-              href="/dashboard"
-              className="text-sm bg-rust text-bone px-4 py-1.5 font-medium rounded-lg hover:bg-rust_hover transition-colors"
-            >
-              Dashboard →
-            </Link>
-          ) : (
-            <>
-              <Link
-                href="/sign-in"
-                className="hidden sm:block text-sm text-muted hover:text-ink transition-colors px-3 py-1.5"
-              >
-                Přihlásit
-              </Link>
-              <Link
-                href="/sign-up"
-                className="text-sm bg-rust text-bone px-4 py-1.5 font-medium rounded-lg hover:bg-rust_hover transition-colors"
-              >
-                Zkusit zdarma
-              </Link>
-            </>
-          )}
+          <NavbarAuth />
         </div>
       </div>
     </nav>
