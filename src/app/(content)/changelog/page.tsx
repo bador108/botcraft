@@ -13,6 +13,30 @@ const entries: {
   changes: Partial<Record<ChangeType, string[]>>
 }[] = [
   {
+    version: 'v0.5.0',
+    date: '22. dubna 2026',
+    changes: {
+      new: [
+        'Vlastní avatar chatbota — nahraj logo nebo favicon (PNG, JPG, SVG, ICO, max 512 KB)',
+        '8 nových preset ikon pro bota (klasický robot, chip, bubble, hvězda, blesk...)',
+        'Barva widgetu se načítá z API při každém načtení stránky — stačí změnit v dashboardu, projeví se okamžitě',
+        'Skript pro embed je stabilní navždy — žádné přegenerování při změně nastavení',
+      ],
+      improved: [
+        'Sidebar: celý řádek účtu je klikatelný, zobrazuje jméno a email',
+        'Knowledge base: přepracovaný design — drag & drop, čistší typografie',
+        'Widget button získá správnou barvu ihned při načtení stránky (dříve až po prvním otevření)',
+        'Content stránky (blog, docs, changelog) přístupné bez přihlášení',
+        'Loading skeletony ve všech dashboard sekcích — plynulejší UX při cold startu',
+      ],
+      fixed: [
+        'Barva tlačítka widgetu byla natvrdo #6366f1 místo barvy bota',
+        'Avatar v chat widgetu se neaktualizoval po nahrání vlastního obrázku',
+        'Blog, docs a kontakt stránky vyžadovaly přihlášení',
+      ],
+    },
+  },
+  {
     version: 'v0.4.0',
     date: '18. dubna 2026',
     changes: {

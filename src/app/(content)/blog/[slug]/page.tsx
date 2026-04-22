@@ -6,6 +6,11 @@ import { notFound } from 'next/navigation'
 interface Post { title: string; date: string; readTime: string; tag: string; content: string }
 
 const posts: Record<string, Post> = {
+  'vlastni-avatar-a-barvy-chatbota': {
+    title: 'Jak dát chatbotovi tvář: vlastní logo, barva a branding bez kódu',
+    date: '22. dubna 2026', readTime: '3 min', tag: 'Návod',
+    content: '<p>Chatbot s logem tvé firmy působí jinak než generický robot s výchozí ikonou. Stačí pár kliknutí — žádné přepisování skriptu, žádný redeploy.</p><h2>Vlastní obrázek</h2><p>V nastavení bota přejdi na záložku Avatar a přepni na Vlastní obrázek. Nahraj PNG, JPG, SVG nebo ICO soubor — ideálně čtvercové logo nebo favicon. Limit je 512 KB. BotCraft obrázek uloží, propojí s botem a od teď ho uvidí každý návštěvník ve widgetu.</p><p>Pokud nechceš vlastní soubor, vyber jednu z 8 preset ikon — od klasického robota po chat bublinu nebo CPU chip.</p><h2>Barva widgetu</h2><p>Pod výběrem avatara najdeš color picker. Tato barva se použije na chat button (kulatý plovoucí element), na hlavičku okna i na odesílací tlačítko. Vyber barvu svého brandu.</p><h2>Proč nemusíš měnit skript</h2><p>Embed skript si při každém načtení stránky automaticky stáhne aktuální konfiguraci bota z BotCraft API. Barva tlačítka se nastaví okamžitě — ještě před prvním kliknutím. Změníš barvu v dashboardu, uložíš — na webu se projeví při příštím načtení. Skript zůstane stejný navždy.</p><pre>&lt;script\n  src="https://botcraft.vercel.app/widget.js"\n  data-bot-id="tvuj-bot-id"\n  async&gt;\n&lt;/script&gt;</pre><p>Tento jeden řádek stačí. Vše ostatní se mění v dashboardu.</p>',
+  },
   'jak-napsat-dobry-system-prompt': {
     title: 'Jak napsat system prompt který chatbota skutečně naučí odpovídat',
     date: '15. dubna 2026', readTime: '6 min', tag: 'Návod',

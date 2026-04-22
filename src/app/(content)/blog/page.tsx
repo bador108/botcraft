@@ -8,6 +8,15 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: 'vlastni-avatar-a-barvy-chatbota',
+    title: 'Jak dát chatbotovi tvář: vlastní logo, barva a branding bez kódu',
+    excerpt:
+      'Chatbot s logem tvé firmy vypadá jinak než generický robot. Ukážu ti, jak nahrát vlastní obrázek, vybrat barvu a proč embed skript nikdy nemusíš měnit.',
+    date: '22. dubna 2026',
+    readTime: '3 min',
+    tag: 'Návod',
+  },
+  {
     slug: 'jak-napsat-dobry-system-prompt',
     title: 'Jak napsat system prompt který chatbota skutečně naučí odpovídat',
     excerpt:
