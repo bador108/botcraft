@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { createServiceClient } from '@/lib/supabase'
 import { KnowledgeBase } from '@/components/chatbot/knowledge-base'
 import { BotNav } from '@/components/dashboard/bot-nav'
+import { BotAvatar } from '@/components/ui/bot-avatar'
 import type { User, Chatbot, Document } from '@/types'
 
 export default async function KnowledgePage({ params }: { params: { id: string } }) {
@@ -22,7 +23,7 @@ export default async function KnowledgePage({ params }: { params: { id: string }
   return (
     <div>
       <div className="flex items-center gap-3 mb-5">
-        <span className="text-2xl">{(chatbot as Chatbot).avatar}</span>
+        <BotAvatar avatar={(chatbot as Chatbot).avatar} size="md" />
         <div>
           <h1 className="font-display font-semibold text-white text-lg tracking-tight">
             {(chatbot as Chatbot).name}

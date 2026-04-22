@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { Send, Loader2 } from 'lucide-react'
+import { getPresetAvatar, isImageUrl } from '@/lib/bot-avatars'
 
 interface BotConfig {
   id: string
@@ -9,13 +10,34 @@ interface BotConfig {
   avatar: string
   theme_color: string
   welcome_message: string
-  // TODO: přidat show_badge do public chatbot API (false pro Maker+ plány)
   show_badge?: boolean
 }
 
 interface Message {
   role: 'user' | 'assistant'
   content: string
+}
+
+function AvatarDisplay({ avatar, size }: { avatar: string; size: number }) {
+  const preset = getPresetAvatar(avatar)
+  if (preset) {
+    return (
+      <div style={{ width: size, height: size, flexShrink: 0 }}>
+        {preset.svg}
+      </div>
+    )
+  }
+  if (isImageUrl(avatar)) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={avatar}
+        alt="bot"
+        style={{ width: size, height: size, borderRadius: '4px', objectFit: 'cover', flexShrink: 0 }}
+      />
+    )
+  }
+  return <span style={{ fontSize: size * 0.7, lineHeight: 1, flexShrink: 0 }}>{avatar}</span>
 }
 
 export function WidgetChat({ bot, domain }: { bot: BotConfig; domain?: string }) {
@@ -29,8 +51,8 @@ export function WidgetChat({ bot, domain }: { bot: BotConfig; domain?: string })
 
   // Pošli barvu tématu rodiči pro chat bubble tlačítko
   useEffect(() => {
-    window.parent.postMessage({ type: 'botcraft-theme', color: '#D4502A' }, '*')
-  }, [])
+    window.parent.postMessage({ type: 'botcraft-theme', color: bot.theme_color || '#D4502A' }, '*')
+  }, [bot.theme_color])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -98,12 +120,12 @@ export function WidgetChat({ bot, domain }: { bot: BotConfig; domain?: string })
   return (
     <div className="flex flex-col h-dvh font-sans text-sm" style={{ background: '#F5F1EA', color: '#1A1814' }}>
 
-      {/* Header — bone/paper, 1px border dole */}
+      {/* Header */}
       <div
         className="flex items-center gap-3 px-4 py-3 shrink-0 border-b"
         style={{ borderColor: '#D9D0C0', background: '#EDE7DC' }}
       >
-        <span className="text-xl">{bot.avatar}</span>
+        <AvatarDisplay avatar={bot.avatar} size={28} />
         <div>
           <p className="font-semibold text-sm leading-tight" style={{ color: '#1A1814' }}>
             {bot.name}
@@ -121,10 +143,10 @@ export function WidgetChat({ bot, domain }: { bot: BotConfig; domain?: string })
           >
             {msg.role === 'assistant' && (
               <div
-                className="h-7 w-7 flex items-center justify-center shrink-0 mt-0.5 text-sm border"
-                style={{ background: '#EDE7DC', borderColor: '#D9D0C0', borderRadius: '2px' }}
+                className="h-7 w-7 flex items-center justify-center shrink-0 mt-0.5 overflow-hidden border"
+                style={{ background: '#EDE7DC', borderColor: '#D9D0C0', borderRadius: '6px' }}
               >
-                {bot.avatar}
+                <AvatarDisplay avatar={bot.avatar} size={24} />
               </div>
             )}
             <div
@@ -132,7 +154,7 @@ export function WidgetChat({ bot, domain }: { bot: BotConfig; domain?: string })
               style={{
                 borderRadius: '2px',
                 ...(msg.role === 'user'
-                  ? { background: '#D4502A', color: '#F5F1EA' }
+                  ? { background: bot.theme_color || '#D4502A', color: '#F5F1EA' }
                   : { background: '#EDE7DC', color: '#1A1814', border: '1px solid #D9D0C0' }),
               }}
             >
@@ -178,7 +200,7 @@ export function WidgetChat({ bot, domain }: { bot: BotConfig; domain?: string })
           <button
             onClick={send}
             disabled={!input.trim() || loading}
-            style={{ background: '#D4502A', borderRadius: '2px', width: '36px', height: '36px' }}
+            style={{ background: bot.theme_color || '#D4502A', borderRadius: '2px', width: '36px', height: '36px' }}
             className="flex items-center justify-center transition-opacity disabled:opacity-40 shrink-0 hover:opacity-90"
           >
             {loading

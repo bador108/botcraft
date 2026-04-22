@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { createServiceClient } from '@/lib/supabase'
 import { ChatbotForm } from '@/components/chatbot/chatbot-form'
 import { BotNav } from '@/components/dashboard/bot-nav'
+import { BotAvatar } from '@/components/ui/bot-avatar'
 import { MessageSquare, FileText, Calendar } from 'lucide-react'
 import type { User, Chatbot } from '@/types'
 
@@ -30,7 +31,7 @@ export default async function ChatbotSettingsPage({ params }: { params: { id: st
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-3">
-        <span className="text-2xl">{bot.avatar}</span>
+        <BotAvatar avatar={bot.avatar} size="md" />
         <div>
           <h1 className="text-2xl font-bold text-ink tracking-tight">{bot.name}</h1>
           <p className="font-mono text-[11px] text-muted uppercase tracking-wider mt-0.5">Nastavení</p>

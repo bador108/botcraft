@@ -18,7 +18,8 @@ CREATE INDEX IF NOT EXISTS idx_chunks_embedding
   ON chunks USING ivfflat (embedding vector_cosine_ops)
   WITH (lists = 100);
 
--- Přepočti match_chunks RPC s novou dimenzí
+-- Přepočti match_chunks RPC s novou dimenzí (DROP kvůli změně return type)
+DROP FUNCTION IF EXISTS match_chunks(vector, UUID, INT);
 CREATE OR REPLACE FUNCTION match_chunks(
   query_embedding vector(1024),
   match_chatbot_id UUID,

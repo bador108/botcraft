@@ -2,6 +2,7 @@ import { auth } from '@clerk/nextjs/server'
 import { notFound } from 'next/navigation'
 import { createServiceClient } from '@/lib/supabase'
 import { BotNav } from '@/components/dashboard/bot-nav'
+import { BotAvatar } from '@/components/ui/bot-avatar'
 import { MessageSquare, User, Bot } from 'lucide-react'
 import type { Chatbot, Message } from '@/types'
 
@@ -50,7 +51,7 @@ export default async function ConversationsPage({ params }: { params: { id: stri
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-3">
-        <span className="text-2xl">{(chatbot as Chatbot).avatar}</span>
+        <BotAvatar avatar={(chatbot as Chatbot).avatar} size="md" />
         <div>
           <h1 className="text-2xl font-bold text-ink tracking-tight">
             {(chatbot as Chatbot).name}

@@ -4,6 +4,7 @@ import { createServiceClient } from '@/lib/supabase'
 import { PLAN_LIMITS } from '@/lib/plans'
 import { getCurrentUsage } from '@/lib/usage'
 import { Button } from '@/components/ui/button'
+import { BotAvatar } from '@/components/ui/bot-avatar'
 import { Bot, Plus, ArrowRight, MessageSquare, Zap } from 'lucide-react'
 import type { User, Chatbot } from '@/types'
 
@@ -157,7 +158,7 @@ export default async function DashboardPage() {
                 href={`/chatbots/${bot.id}`}
                 className="flex items-center gap-4 px-5 py-4 hover:bg-bone transition-colors group"
               >
-                <span className="text-xl shrink-0">{bot.avatar}</span>
+                <BotAvatar avatar={bot.avatar} size="sm" />
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-ink text-sm">{bot.name}</p>
                   <p className="text-xs text-muted mt-0.5">
