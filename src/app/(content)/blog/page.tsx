@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 const posts = [
   {
     slug: 'jak-napsat-dobry-system-prompt',
-    title: 'Jak napsat system prompt, který chatbota skutečně naučí odpovídat',
+    title: 'Jak napsat system prompt který chatbota skutečně naučí odpovídat',
     excerpt:
       'System prompt je nejdůležitější 500 znaků tvého bota. Projdeme si, co tam patří, co ne, a proč většina lidí dělá jednu a tu stejnou chybu.',
     date: '15. dubna 2026',
