@@ -29,7 +29,7 @@ export function Navbar() {
             { label: 'Funkce', href: '#features' },
             { label: 'Ceník', href: '#pricing' },
             { label: 'Kontakt', href: '#kontakt' },
-            
+            { label: 'Docs', href: '/docs' },
           ].map(({ label, href }) => (
             <a
               key={label}
