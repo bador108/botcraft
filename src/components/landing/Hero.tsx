@@ -1,6 +1,16 @@
-import { InteractiveBuilder } from './InteractiveBuilder'
+import dynamic from 'next/dynamic'
 import { HeroCTA } from './HeroCTA'
 import { Zap } from 'lucide-react'
+
+const InteractiveBuilder = dynamic(
+  () => import('./InteractiveBuilder').then(m => ({ default: m.InteractiveBuilder })),
+  {
+    loading: () => (
+      <div className="rounded-2xl border border-paper_border bg-paper h-[480px] animate-pulse" />
+    ),
+    ssr: false,
+  }
+)
 
 export function Hero() {
   return (
@@ -9,13 +19,11 @@ export function Hero() {
 
         {/* Levý sloupec */}
         <div className="animate-fade-up">
-          {/* Pill badge */}
           <div className="inline-flex items-center gap-2 bg-rust/10 text-rust text-xs font-medium px-3 py-1.5 rounded-full mb-6">
             <Zap className="h-3.5 w-3.5" />
             AI Chatbot Builder
           </div>
 
-          {/* H1 */}
           <h1
             className="font-mono font-medium text-ink leading-[1.08] tracking-tight mb-6"
             style={{ fontSize: 'clamp(2.4rem, 5vw, 4rem)', letterSpacing: '-0.025em' }}
@@ -25,16 +33,14 @@ export function Hero() {
             — za tři minuty
           </h1>
 
-          {/* Podtitulek */}
           <p className="text-muted text-base leading-relaxed mb-8 max-w-sm">
             Nahraj dokumenty, bot začne odpovídat z tvé knowledge base. Jeden řádek kódu pro embed kamkoliv.
           </p>
 
-          {/* CTA — client island pro auth state */}
           <HeroCTA />
         </div>
 
-        {/* Pravý sloupec */}
+        {/* Pravý sloupec — lazy loaded */}
         <div className="animate-fade-up-2">
           <InteractiveBuilder />
         </div>

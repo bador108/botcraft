@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { UserButton, useUser } from '@clerk/nextjs'
-import { LayoutDashboard, Bot, CreditCard, FileText, BarChart2, Settings, ExternalLink, Menu, X } from 'lucide-react'
+import { LayoutDashboard, Bot, CreditCard, FileText, BarChart2, Settings, BookOpen, Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { clerkAppearance } from '@/lib/clerk-theme'
 import { Logo } from '@/components/Logo'
@@ -46,13 +46,11 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
 
       <div className="pt-3 mt-3 border-t border-paper_border">
         <a
-          href="https://docs.botcraft.app"
-          target="_blank"
-          rel="noopener noreferrer"
+          href="/docs"
           onClick={onNavigate}
           className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted hover:bg-bone hover:text-ink transition-all"
         >
-          <ExternalLink className="h-4 w-4 shrink-0 text-muted" />
+          <BookOpen className="h-4 w-4 shrink-0 text-muted" />
           Dokumentace
         </a>
       </div>
