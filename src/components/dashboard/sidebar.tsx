@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { UserButton, useUser } from '@clerk/nextjs'
+import { UserButton, useUser, useClerk } from '@clerk/nextjs'
 import { LayoutDashboard, Bot, CreditCard, FileText, BarChart2, Settings, BookOpen, Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { clerkAppearance } from '@/lib/clerk-theme'
@@ -68,19 +68,32 @@ function SidebarLogo() {
 
 function UserSection() {
   const { user } = useUser()
+  const { openUserProfile } = useClerk()
   return (
     <div className="border-t border-paper_border p-3">
-      <div className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-bone transition-colors">
-        <UserButton appearance={clerkAppearance} />
+      <button
+        type="button"
+        onClick={() => openUserProfile()}
+        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-bone transition-colors text-left group"
+      >
+        {/* Profilovka — neklikatelná samostatně, celý řádek je button */}
+        <div className="shrink-0 pointer-events-none">
+          <UserButton appearance={clerkAppearance} />
+        </div>
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-medium text-ink truncate">
-            {user?.firstName ?? user?.emailAddresses[0]?.emailAddress ?? 'Účet'}
+          <p className="text-sm font-medium text-ink truncate leading-tight">
+            {user?.firstName
+              ? `${user.firstName}${user.lastName ? ` ${user.lastName}` : ''}`
+              : user?.emailAddresses[0]?.emailAddress ?? 'Účet'}
           </p>
-          <p className="text-xs text-muted truncate">
-            {user?.emailAddresses[0]?.emailAddress}
+          <p className="text-xs text-muted truncate mt-0.5">
+            {user?.emailAddresses[0]?.emailAddress ?? 'Nastavení účtu'}
           </p>
         </div>
-      </div>
+        <svg className="h-3.5 w-3.5 text-muted shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
     </div>
   )
 }
