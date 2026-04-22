@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { notFound } from 'next/navigation'
 import { createServiceClient } from '@/lib/supabase'
 import { WidgetChat } from './widget-chat'

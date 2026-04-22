@@ -30,7 +30,7 @@ export function KnowledgeBase({ chatbotId, initialDocuments, plan }: KnowledgeBa
   const canUpload = limits.documents_per_chatbot === Infinity || documents.length < limits.documents_per_chatbot
 
   const onDrop = useCallback(async (files: File[]) => {
-    if (!canUpload) { setError('Document limit reached. Upgrade to add more.'); return }
+    if (!canUpload) { setError('Limit dokumentů dosažen. Upgraduj pro více.'); return }
     const file = files[0]
     if (!file) return
 
@@ -43,7 +43,7 @@ export function KnowledgeBase({ chatbotId, initialDocuments, plan }: KnowledgeBa
       const res = await fetch('/api/documents', { method: 'POST', body: fd })
       if (!res.ok) {
         const e = await res.json().catch(() => ({}))
-        setError(e.error ?? 'Upload failed')
+        setError(e.error ?? 'Upload selhal')
         return
       }
       const doc = await res.json()
@@ -66,7 +66,7 @@ export function KnowledgeBase({ chatbotId, initialDocuments, plan }: KnowledgeBa
 
   async function pasteRawText() {
     if (!pasteText.trim() || !pasteName.trim()) return
-    if (!canUpload) { setError('Document limit reached. Upgrade to add more.'); return }
+    if (!canUpload) { setError('Limit dokumentů dosažen. Upgraduj pro více.'); return }
     setPasting(true)
     setError('')
     try {
@@ -77,7 +77,7 @@ export function KnowledgeBase({ chatbotId, initialDocuments, plan }: KnowledgeBa
       })
       if (!res.ok) {
         const e = await res.json().catch(() => ({}))
-        setError(e.error ?? 'Failed to add text')
+        setError(e.error ?? 'Přidání textu selhalo')
         return
       }
       const doc = await res.json()
@@ -90,7 +90,7 @@ export function KnowledgeBase({ chatbotId, initialDocuments, plan }: KnowledgeBa
   }
 
   async function deleteDocument(id: string) {
-    if (!confirm('Delete this document and all its chunks?')) return
+    if (!confirm('Smazat tento dokument a všechny jeho chunky?')) return
     await fetch(`/api/documents/${id}`, { method: 'DELETE' })
     setDocuments(prev => prev.filter(d => d.id !== id))
   }
@@ -99,18 +99,18 @@ export function KnowledgeBase({ chatbotId, initialDocuments, plan }: KnowledgeBa
     <div className="space-y-6 max-w-2xl">
       {/* Stats */}
       <div className="flex gap-4 text-sm">
-        <span className="text-gray-500 dark:text-gray-400">
-          <strong className="text-gray-900 dark:text-white">{documents.length}</strong>
-          {limits.documents_per_chatbot !== Infinity ? ` / ${limits.documents_per_chatbot}` : ''} documents
+        <span className="text-muted">
+          <strong className="text-ink">{documents.length}</strong>
+          {limits.documents_per_chatbot !== Infinity ? ` / ${limits.documents_per_chatbot}` : ''} dokumentů
         </span>
-        <span className="text-gray-500 dark:text-gray-400">
-          <strong className="text-gray-900 dark:text-white">{totalChunks}</strong>
-          {limits.chunks_per_chatbot !== Infinity ? ` / ${limits.chunks_per_chatbot}` : ''} chunks
+        <span className="text-muted">
+          <strong className="text-ink">{totalChunks}</strong>
+          {limits.chunks_per_chatbot !== Infinity ? ` / ${limits.chunks_per_chatbot}` : ''} chunků
         </span>
       </div>
 
       {error && (
-        <div className="flex items-center gap-2 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg text-red-600 dark:text-red-400 text-sm">
+        <div className="flex items-center gap-2 p-3 bg-red-50 rounded-lg text-red-600 text-sm border border-red-100">
           <AlertCircle className="h-4 w-4 shrink-0" />
           {error}
         </div>
@@ -118,16 +118,18 @@ export function KnowledgeBase({ chatbotId, initialDocuments, plan }: KnowledgeBa
 
       {/* Upload tabs */}
       <Card className="p-6 space-y-4">
-        <div className="flex border-b border-gray-200 dark:border-gray-700 gap-4">
+        <div className="flex border-b border-paper_border gap-4">
           {(['upload', 'paste'] as const).map(t => (
             <button
               key={t}
               onClick={() => setTab(t)}
               className={`pb-2 text-sm font-medium border-b-2 transition -mb-px ${
-                tab === t ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
+                tab === t
+                  ? 'border-ink text-ink'
+                  : 'border-transparent text-muted hover:text-ink'
               }`}
             >
-              {t === 'upload' ? 'Upload File' : 'Paste Text'}
+              {t === 'upload' ? 'Nahrát soubor' : 'Vložit text'}
             </button>
           ))}
         </div>
@@ -136,21 +138,23 @@ export function KnowledgeBase({ chatbotId, initialDocuments, plan }: KnowledgeBa
           <div
             {...getRootProps()}
             className={`border-2 border-dashed rounded-xl p-6 md:p-10 text-center cursor-pointer transition ${
-              isDragActive ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/10' :
-              !canUpload ? 'border-gray-200 opacity-50 cursor-not-allowed' :
-              'border-gray-200 dark:border-gray-700 hover:border-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-800/50'
+              isDragActive
+                ? 'border-rust bg-rust/5'
+                : !canUpload
+                ? 'border-paper_border opacity-50 cursor-not-allowed'
+                : 'border-paper_border hover:border-ink/30 hover:bg-bone'
             }`}
           >
             <input {...getInputProps()} />
             {uploading ? (
-              <Loader2 className="h-8 w-8 text-indigo-500 animate-spin mx-auto mb-2" />
+              <Loader2 className="h-8 w-8 text-rust animate-spin mx-auto mb-2" />
             ) : (
-              <Upload className="h-8 w-8 text-gray-300 mx-auto mb-2" />
+              <Upload className="h-8 w-8 text-muted mx-auto mb-2" />
             )}
-            <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              {uploading ? 'Processing...' : isDragActive ? 'Drop file here' : 'Drag & drop or click to upload'}
+            <p className="text-sm font-medium text-ink">
+              {uploading ? 'Zpracovávám...' : isDragActive ? 'Pusť soubor zde' : 'Přetáhni nebo klikni pro nahrání'}
             </p>
-            <p className="text-xs text-gray-400 mt-1">PDF, TXT, MD — max 10MB</p>
+            <p className="text-xs text-muted mt-1">PDF, TXT, MD — max 10 MB</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -158,17 +162,17 @@ export function KnowledgeBase({ chatbotId, initialDocuments, plan }: KnowledgeBa
               type="text"
               value={pasteName}
               onChange={e => setPasteName(e.target.value)}
-              placeholder="Document name (e.g. FAQ)"
-              className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              placeholder="Název dokumentu (např. FAQ)"
+              className="w-full rounded-lg border border-paper_border bg-white px-3 py-2 text-sm text-ink placeholder:text-muted focus:outline-none focus:border-ink transition-colors"
             />
             <Textarea
               value={pasteText}
               onChange={e => setPasteText(e.target.value)}
-              placeholder="Paste your text content here..."
+              placeholder="Vlož obsah textu zde..."
               rows={8}
             />
             <Button onClick={pasteRawText} loading={pasting} disabled={!pasteText.trim() || !pasteName.trim()}>
-              Add to Knowledge Base
+              Přidat do znalostní báze
             </Button>
           </div>
         )}
@@ -177,18 +181,18 @@ export function KnowledgeBase({ chatbotId, initialDocuments, plan }: KnowledgeBa
       {/* Document list */}
       {documents.length > 0 && (
         <div className="space-y-2">
-          <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Documents</h3>
+          <h3 className="text-sm font-semibold text-ink">Dokumenty</h3>
           {documents.map(doc => (
             <Card key={doc.id} className="px-4 py-3">
               <div className="flex items-center gap-3">
-                <FileText className="h-4 w-4 text-indigo-500 shrink-0" />
+                <FileText className="h-4 w-4 text-rust shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{doc.name}</p>
-                  <p className="text-xs text-gray-400">{doc.chunk_count} chunks · {formatDate(doc.created_at)}</p>
+                  <p className="text-sm font-medium text-ink truncate">{doc.name}</p>
+                  <p className="text-xs text-muted">{doc.chunk_count} chunků · {formatDate(doc.created_at)}</p>
                 </div>
                 <button
                   onClick={() => deleteDocument(doc.id)}
-                  className="p-1.5 text-gray-300 hover:text-red-500 transition"
+                  className="p-1.5 text-muted hover:text-red-500 transition-colors rounded"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>
@@ -199,9 +203,9 @@ export function KnowledgeBase({ chatbotId, initialDocuments, plan }: KnowledgeBa
       )}
 
       {!canUpload && (
-        <p className="text-xs text-amber-600 dark:text-amber-400 text-center">
-          Document limit reached.{' '}
-          <a href="/billing" className="underline">Upgrade</a> to add more.
+        <p className="text-xs text-amber-600 text-center">
+          Limit dokumentů dosažen.{' '}
+          <a href="/billing" className="underline hover:text-amber-700">Upgraduj</a> pro více.
         </p>
       )}
     </div>

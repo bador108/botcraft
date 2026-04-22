@@ -6,7 +6,6 @@
   var appUrl = new URL(script.src).origin;
   var domain = window.location.hostname;
   var isOpen = false;
-  var iframeLoaded = false;
 
   // Container
   var container = document.createElement('div');
@@ -22,21 +21,32 @@
   iframe.style.cssText =
     'display:none;width:380px;height:600px;max-height:80vh;border:none;border-radius:16px;' +
     'box-shadow:0 20px 60px rgba(0,0,0,0.15),0 0 0 1px rgba(0,0,0,0.05);' +
-    'margin-bottom:12px;background:#fff;transition:opacity 0.2s ease;opacity:0;' +
-    (isMobileInit ? '' : 'transform:translateY(8px) scale(0.98);transition:opacity 0.2s ease,transform 0.2s ease;');
+    'margin-bottom:12px;background:#fff;opacity:0;' +
+    (isMobileInit ? '' : 'transform:translateY(8px) scale(0.98);') +
+    'transition:opacity 0.2s ease,transform 0.2s ease;';
 
-  // Toggle button
+  // Toggle button — defaultní barva, přepíše se z API
   var btn = document.createElement('button');
   btn.style.cssText =
     'width:56px;height:56px;border-radius:50%;border:none;cursor:pointer;' +
     'display:flex;align-items:center;justify-content:center;' +
-    'box-shadow:0 4px 16px rgba(0,0,0,0.18);transition:transform 0.2s ease,box-shadow 0.2s ease;' +
-    'background:#6366f1;outline:none;';
+    'box-shadow:0 4px 16px rgba(0,0,0,0.18);transition:transform 0.2s ease,box-shadow 0.2s ease,background 0.3s ease;' +
+    'background:#D4500A;outline:none;';
 
   var chatSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>';
   var closeSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
 
   btn.innerHTML = chatSvg;
+
+  // Načti barvu z API hned — nezávisle na iframe
+  fetch(appUrl + '/api/public/chatbots/' + botId)
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (data) {
+      if (data && data.theme_color) {
+        btn.style.background = data.theme_color;
+      }
+    })
+    .catch(function () {});
 
   btn.addEventListener('mouseenter', function () {
     btn.style.transform = 'scale(1.08)';
@@ -54,7 +64,6 @@
       iframe.style.display = 'block';
       requestAnimationFrame(function () {
         iframe.style.opacity = '1';
-        // On mobile: no transform — transform on iframe blocks iOS keyboard focus
         iframe.style.transform = mobile ? 'none' : 'translateY(0) scale(1)';
         iframe.style.webkitTransform = mobile ? 'none' : 'translateY(0) scale(1)';
       });
@@ -68,7 +77,7 @@
     }
   });
 
-  // Receive theme color from iframe
+  // Aktualizace barvy z iframe (backup — potvrdí přesnou hodnotu)
   window.addEventListener('message', function (e) {
     if (e.data && e.data.type === 'botcraft-theme' && e.data.color) {
       btn.style.background = e.data.color;
