@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useAuth } from '@clerk/nextjs'
 import { Logo } from '@/components/Logo'
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
+  const { isSignedIn } = useAuth()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -28,7 +30,7 @@ export function Navbar() {
           {[
             { label: 'Funkce', href: '#features' },
             { label: 'Ceník', href: '#pricing' },
-            { label: 'Docs', href: '#' },
+            { label: 'Kontakt', href: '#kontakt' },
             { label: 'GitHub', href: 'https://github.com/bador108/botcraft' },
           ].map(({ label, href }) => (
             <a
@@ -43,18 +45,29 @@ export function Navbar() {
 
         {/* Actions — right */}
         <div className="flex items-center gap-2">
-          <Link
-            href="/sign-in"
-            className="hidden sm:block text-sm text-muted hover:text-ink transition-colors px-3 py-1.5"
-          >
-            Přihlásit
-          </Link>
-          <Link
-            href="/sign-up"
-            className="text-sm bg-rust text-bone px-4 py-1.5 font-medium rounded-lg hover:bg-rust_hover transition-colors"
-          >
-            Zkusit zdarma
-          </Link>
+          {isSignedIn ? (
+            <Link
+              href="/dashboard"
+              className="text-sm bg-rust text-bone px-4 py-1.5 font-medium rounded-lg hover:bg-rust_hover transition-colors"
+            >
+              Dashboard →
+            </Link>
+          ) : (
+            <>
+              <Link
+                href="/sign-in"
+                className="hidden sm:block text-sm text-muted hover:text-ink transition-colors px-3 py-1.5"
+              >
+                Přihlásit
+              </Link>
+              <Link
+                href="/sign-up"
+                className="text-sm bg-rust text-bone px-4 py-1.5 font-medium rounded-lg hover:bg-rust_hover transition-colors"
+              >
+                Zkusit zdarma
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </nav>
