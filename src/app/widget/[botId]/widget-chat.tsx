@@ -10,6 +10,7 @@ interface BotConfig {
   avatar: string
   theme_color: string
   welcome_message: string
+  suggested_questions?: string[]
   show_badge?: boolean
 }
 
@@ -58,16 +59,13 @@ export function WidgetChat({ bot, domain }: { bot: BotConfig; domain?: string })
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  async function send() {
-    const text = input.trim()
+  async function sendText(text: string) {
     if (!text || loading) return
+    setInput('')
 
     const newMessages: Message[] = [...messages, { role: 'user', content: text }]
     setMessages(newMessages)
-    setInput('')
     setLoading(true)
-
-    // Přidej placeholder odpovědi
     setMessages(prev => [...prev, { role: 'assistant', content: '' }])
 
     try {
@@ -90,7 +88,6 @@ export function WidgetChat({ bot, domain }: { bot: BotConfig; domain?: string })
         return
       }
 
-      // Parsuj text stream (toTextStreamResponse)
       const reader = res.body!.getReader()
       const decoder = new TextDecoder()
       let fullText = ''
@@ -115,7 +112,14 @@ export function WidgetChat({ bot, domain }: { bot: BotConfig; domain?: string })
     }
   }
 
+  async function send() {
+    await sendText(input.trim())
+  }
+
   const showBadge = bot.show_badge !== false
+  // Navrhované otázky zobrazíme po každé odpovědi asistenta (jako follow-up shortcuts)
+  const lastMsg = messages[messages.length - 1]
+  const showSuggestions = (bot.suggested_questions?.length ?? 0) > 0 && !loading && lastMsg?.role === 'assistant' && !!lastMsg.content
 
   return (
     <div className="flex flex-col h-dvh font-sans text-sm" style={{ background: '#F5F1EA', color: '#1A1814' }}>
@@ -172,6 +176,30 @@ export function WidgetChat({ bot, domain }: { bot: BotConfig; domain?: string })
             </div>
           </div>
         ))}
+
+        {/* Navrhované otázky — po každé odpovědi asistenta */}
+        {showSuggestions && (
+          <div className="flex flex-wrap gap-2 pl-9">
+            {bot.suggested_questions!.map((q, i) => (
+              <button
+                key={i}
+                onClick={() => sendText(q)}
+                className="text-xs px-3 py-1.5 border transition-colors hover:bg-[#EDE7DC]"
+                style={{
+                  borderRadius: '2px',
+                  borderColor: bot.theme_color || '#D4502A',
+                  background: '#F5F1EA',
+                  color: '#1A1814',
+                  textAlign: 'left',
+                  opacity: 0.85,
+                }}
+              >
+                {q}
+              </button>
+            ))}
+          </div>
+        )}
+
         <div ref={bottomRef} />
       </div>
 

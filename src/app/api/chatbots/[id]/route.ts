@@ -30,7 +30,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   const limits = PLAN_LIMITS[plan]
 
   const body = await req.json()
-  const { name, avatar, system_prompt, model, theme_color, welcome_message, allowed_domains, is_active } = body
+  const { name, avatar, system_prompt, model, theme_color, welcome_message, allowed_domains, suggested_questions, is_active } = body
 
   if (model && !limits.models.includes(model)) {
     return NextResponse.json({ error: 'Model not available on your plan.' }, { status: 403 })
@@ -46,6 +46,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
       theme_color,
       welcome_message,
       allowed_domains,
+      suggested_questions: suggested_questions ?? [],
       is_active,
       updated_at: new Date().toISOString(),
     })

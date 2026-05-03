@@ -25,6 +25,7 @@ CREATE TABLE chatbots (
   theme_color TEXT DEFAULT '#6366f1',
   welcome_message TEXT DEFAULT 'Hi! How can I help you today?',
   allowed_domains TEXT[] DEFAULT '{}',
+  suggested_questions TEXT[] DEFAULT '{}',
   is_active BOOLEAN DEFAULT TRUE,
   message_count_month INT DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT NOW(),

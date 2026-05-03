@@ -24,6 +24,7 @@ export interface Chatbot {
   theme_color: string
   welcome_message: string
   allowed_domains: string[]
+  suggested_questions: string[]
   is_active: boolean
   message_count_month: number
   created_at: string

@@ -8,7 +8,7 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
   const db = createServiceClient()
   const { data, error } = await db
     .from('chatbots')
-    .select('id, name, avatar, theme_color, welcome_message, is_active, user_id')
+    .select('id, name, avatar, theme_color, welcome_message, suggested_questions, is_active, user_id')
     .eq('id', params.id)
     .eq('is_active', true)
     .single()

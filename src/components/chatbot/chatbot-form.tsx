@@ -23,6 +23,7 @@ export function ChatbotForm({ chatbot, plan }: ChatbotFormProps) {
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [domainInput, setDomainInput] = useState('')
+  const [questionInput, setQuestionInput] = useState('')
   const [avatarTab, setAvatarTab] = useState<'preset' | 'custom'>(() =>
     chatbot?.avatar && isImageUrl(chatbot.avatar) ? 'custom' : 'preset'
   )
@@ -38,6 +39,7 @@ export function ChatbotForm({ chatbot, plan }: ChatbotFormProps) {
     theme_color: chatbot?.theme_color ?? '#D4500A',
     welcome_message: chatbot?.welcome_message ?? 'Ahoj! Jak ti mohu pomoci?',
     allowed_domains: chatbot?.allowed_domains ?? [] as string[],
+    suggested_questions: chatbot?.suggested_questions ?? [] as string[],
     is_active: chatbot?.is_active ?? true,
   })
 
@@ -58,6 +60,17 @@ export function ChatbotForm({ chatbot, plan }: ChatbotFormProps) {
 
   const removeDomain = (d: string) =>
     set('allowed_domains', form.allowed_domains.filter(x => x !== d))
+
+  const addQuestion = () => {
+    const q = questionInput.trim()
+    if (q && !form.suggested_questions.includes(q)) {
+      set('suggested_questions', [...form.suggested_questions, q])
+      setQuestionInput('')
+    }
+  }
+
+  const removeQuestion = (q: string) =>
+    set('suggested_questions', form.suggested_questions.filter(x => x !== q))
 
   async function handleAvatarUpload(file: File) {
     if (!chatbot?.id) {
@@ -334,6 +347,42 @@ export function ChatbotForm({ chatbot, plan }: ChatbotFormProps) {
           onChange={e => set('welcome_message', e.target.value)}
           placeholder="Ahoj! Jak ti mohu pomoci?"
         />
+      </Card>
+
+      {/* Suggested questions */}
+      <Card className="p-6 space-y-4">
+        <div>
+          <h2 className="font-semibold text-ink">Navrhované otázky</h2>
+          <p className="text-xs text-muted mt-0.5">
+            Tlačítka zobrazená uživateli po uvítací zprávě. Kliknutím odešlou otázku přímo.
+          </p>
+        </div>
+
+        <div className="flex gap-2">
+          <Input
+            value={questionInput}
+            onChange={e => setQuestionInput(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addQuestion())}
+            placeholder="Jak mohu sledovat stav objednávky?"
+            className="flex-1"
+          />
+          <Button variant="secondary" size="sm" onClick={addQuestion} type="button">
+            <Plus className="h-4 w-4" />
+          </Button>
+        </div>
+
+        {form.suggested_questions.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {form.suggested_questions.map(q => (
+              <span key={q} className="flex items-center gap-1 bg-bone text-ink text-xs px-2.5 py-1 rounded-full border border-paper_border max-w-full">
+                <span className="truncate max-w-[240px]">{q}</span>
+                <button type="button" onClick={() => removeQuestion(q)} className="shrink-0">
+                  <X className="h-3 w-3" />
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
       </Card>
 
       {/* Security */}
