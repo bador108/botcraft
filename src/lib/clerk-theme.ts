@@ -2,9 +2,9 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const clerkAppearance: any = {
   layout: {
-    logoImageUrl: '/logo.svg',
+    logoImageUrl: 'https://botcraft.vercel.app/logo.svg',
     logoLinkUrl: '/',
-    logoPlacement: 'inside',
+    logoPlacement: 'none',
     showOptionalFields: true,
     socialButtonsPlacement: 'bottom',
     socialButtonsVariant: 'blockButton',
