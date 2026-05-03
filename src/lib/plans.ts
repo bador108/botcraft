@@ -1,5 +1,13 @@
 import type { Plan, PlanLimits, ChatModel } from '@/types'
 
+export const OWNER_EMAIL = 'vaclav.urbanec2@gmail.com'
+
+/** Vlastník má vždy enterprise plán bez ohledu na Stripe */
+export function getEffectivePlan(plan: Plan, email?: string | null): Plan {
+  if (email === OWNER_EMAIL) return 'enterprise'
+  return plan
+}
+
 export const PLAN_LIMITS: Record<Plan, PlanLimits> = {
   // ── Nová struktura plánů ────────────────────────────────────────
   hobby: {

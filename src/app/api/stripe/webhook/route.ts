@@ -3,6 +3,7 @@ import { stripe } from '@/lib/stripe'
 import { createServiceClient } from '@/lib/supabase'
 import { sendEmail } from '@/lib/notifications/send'
 import { failedPaymentHtml } from '@/lib/notifications/templates'
+import { OWNER_EMAIL } from '@/lib/plans'
 import type Stripe from 'stripe'
 
 export const runtime = 'nodejs'
@@ -39,9 +40,10 @@ export async function POST(req: Request) {
 
       const cycle = item?.price.recurring?.interval === 'year' ? 'yearly' : 'monthly'
 
-      // Aktualizuj users tabulku (zpětná kompatibilita)
+      // Aktualizuj users tabulku (vlastník zachová enterprise plán)
+      const { data: existingUser } = await db.from('users').select('email').eq('id', userId).single()
       await db.from('users').update({
-        plan,
+        plan: existingUser?.email === OWNER_EMAIL ? 'enterprise' : plan,
         stripe_customer_id: customerId,
         stripe_subscription_id: subscriptionId,
       }).eq('id', userId)
@@ -75,8 +77,9 @@ export async function POST(req: Request) {
         : priceId === process.env.STRIPE_BUSINESS_PRICE_ID ? 'business'
         : 'free'
 
-      // Aktualizuj users
-      await db.from('users').update({ plan })
+      // Aktualizuj users (vlastník zachová enterprise plán)
+      const { data: subUser } = await db.from('users').select('email').eq('stripe_subscription_id', subscription.id).single()
+      await db.from('users').update({ plan: subUser?.email === OWNER_EMAIL ? 'enterprise' : plan })
         .eq('stripe_subscription_id', subscription.id)
 
       // Aktualizuj subscriptions
@@ -98,8 +101,11 @@ export async function POST(req: Request) {
     case 'customer.subscription.deleted': {
       const subscription = event.data.object as Stripe.Subscription
 
-      await db.from('users').update({ plan: 'free', stripe_subscription_id: null })
-        .eq('stripe_subscription_id', subscription.id)
+      const { data: deletedSubUser } = await db.from('users').select('email').eq('stripe_subscription_id', subscription.id).single()
+      await db.from('users').update({
+        plan: deletedSubUser?.email === OWNER_EMAIL ? 'enterprise' : 'free',
+        stripe_subscription_id: null,
+      }).eq('stripe_subscription_id', subscription.id)
 
       await db.from('subscriptions').update({
         plan: 'hobby',

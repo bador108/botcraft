@@ -1,7 +1,7 @@
 import { auth } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
-import { PLAN_LIMITS } from '@/lib/plans'
+import { PLAN_LIMITS, getEffectivePlan } from '@/lib/plans'
 import type { User, Chatbot } from '@/types'
 
 export async function POST(_req: Request, { params }: { params: { id: string } }) {
@@ -11,14 +11,14 @@ export async function POST(_req: Request, { params }: { params: { id: string } }
   const db = createServiceClient()
 
   const [{ data: user }, { data: source }, { data: existing }] = await Promise.all([
-    db.from('users').select('plan').eq('id', userId).single(),
+    db.from('users').select('plan, email').eq('id', userId).single(),
     db.from('chatbots').select('*').eq('id', params.id).eq('user_id', userId).single(),
     db.from('chatbots').select('id', { count: 'exact' }).eq('user_id', userId),
   ])
 
   if (!source) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
-  const plan = (user as User | null)?.plan ?? 'free'
+  const plan = getEffectivePlan((user as User | null)?.plan ?? 'free', (user as User | null)?.email)
   const limits = PLAN_LIMITS[plan]
   const count = existing?.length ?? 0
 

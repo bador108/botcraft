@@ -3,7 +3,7 @@ import { streamText } from 'ai'
 import { createServiceClient } from '@/lib/supabase'
 import { groq } from '@/lib/groq'
 import { embedQuery } from '@/lib/documents/embed'
-import { PLAN_LIMITS } from '@/lib/plans'
+import { PLAN_LIMITS, getEffectivePlan } from '@/lib/plans'
 import { getCachedResponse, setCachedResponse } from '@/lib/cache'
 import { checkRateLimit } from '@/lib/rate-limit'
 import { getCurrentUsage, incrementUsage } from '@/lib/usage'
@@ -66,11 +66,11 @@ export async function POST(req: Request) {
     // Zjisti plán vlastníka bota
     const { data: user } = await db
       .from('users')
-      .select('plan, message_count_month')
+      .select('plan, message_count_month, email')
       .eq('id', bot.user_id)
       .single()
 
-    const plan = ((user as User | null)?.plan ?? 'hobby') as Plan
+    const plan = getEffectivePlan(((user as User | null)?.plan ?? 'hobby') as Plan, (user as User | null)?.email)
     const limits = PLAN_LIMITS[plan]
 
     // Rate limit (per-owner, Supabase-backed)

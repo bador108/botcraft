@@ -1,7 +1,7 @@
 import { auth } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
-import { PLAN_LIMITS } from '@/lib/plans'
+import { PLAN_LIMITS, getEffectivePlan } from '@/lib/plans'
 import type { User } from '@/types'
 
 export async function GET(_req: Request, { params }: { params: { id: string } }) {
@@ -25,8 +25,8 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const db = createServiceClient()
-  const { data: user } = await db.from('users').select('plan').eq('id', userId).single()
-  const plan = (user as User | null)?.plan ?? 'free'
+  const { data: user } = await db.from('users').select('plan, email').eq('id', userId).single()
+  const plan = getEffectivePlan((user as User | null)?.plan ?? 'free', (user as User | null)?.email)
   const limits = PLAN_LIMITS[plan]
 
   const body = await req.json()

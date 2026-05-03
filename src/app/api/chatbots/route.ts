@@ -1,7 +1,7 @@
 import { auth, currentUser } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
-import { PLAN_LIMITS } from '@/lib/plans'
+import { PLAN_LIMITS, getEffectivePlan } from '@/lib/plans'
 import type { User } from '@/types'
 
 async function ensureUser(userId: string) {
@@ -39,8 +39,8 @@ export async function POST(req: Request) {
   await ensureUser(userId)
 
   const db = createServiceClient()
-  const { data: user } = await db.from('users').select('plan').eq('id', userId).single()
-  const plan = (user as User | null)?.plan ?? 'free'
+  const { data: user } = await db.from('users').select('plan, email').eq('id', userId).single()
+  const plan = getEffectivePlan((user as User | null)?.plan ?? 'free', (user as User | null)?.email)
   const limits = PLAN_LIMITS[plan]
 
   const { count } = await db
