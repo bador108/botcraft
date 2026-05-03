@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { UserButton, useUser, useClerk } from '@clerk/nextjs'
-import { LayoutDashboard, Bot, CreditCard, FileText, BarChart2, Settings, BookOpen, Menu, X } from 'lucide-react'
+import { LayoutDashboard, Bot, CreditCard, FileText, BarChart2, Settings, BookOpen, Menu, X, LogOut } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { clerkAppearance } from '@/lib/clerk-theme'
 import { Logo } from '@/components/Logo'
@@ -68,15 +68,14 @@ function SidebarLogo() {
 
 function UserSection() {
   const { user } = useUser()
-  const { openUserProfile } = useClerk()
+  const { openUserProfile, signOut } = useClerk()
   return (
-    <div className="border-t border-paper_border p-3">
+    <div className="border-t border-paper_border p-3 space-y-1">
       <button
         type="button"
         onClick={() => openUserProfile()}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-bone transition-colors text-left group"
       >
-        {/* Profilovka — neklikatelná samostatně, celý řádek je button */}
         <div className="shrink-0 pointer-events-none">
           <UserButton appearance={clerkAppearance} />
         </div>
@@ -93,6 +92,14 @@ function UserSection() {
         <svg className="h-3.5 w-3.5 text-muted shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
         </svg>
+      </button>
+      <button
+        type="button"
+        onClick={() => signOut({ redirectUrl: '/sign-in' })}
+        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted hover:bg-red-50 hover:text-red-600 transition-all"
+      >
+        <LogOut className="h-4 w-4 shrink-0" />
+        Odhlásit se
       </button>
     </div>
   )
