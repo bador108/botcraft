@@ -2,6 +2,7 @@ import { auth, currentUser } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import { Sidebar } from '@/components/dashboard/sidebar'
 import { createServiceClient } from '@/lib/supabase'
+import { OWNER_EMAIL } from '@/lib/plans'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { userId } = await auth()
@@ -9,14 +10,19 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   // Auto-create Supabase user on first login
   const db = createServiceClient()
-  const { data: existing } = await db.from('users').select('id').eq('id', userId).single()
+  const { data: existing } = await db.from('users').select('id, email, plan').eq('id', userId).single()
   if (!existing) {
     const clerkUser = await currentUser()
+    const email = clerkUser?.emailAddresses[0]?.emailAddress ?? ''
     await db.from('users').insert({
       id: userId,
-      email: clerkUser?.emailAddresses[0]?.emailAddress ?? '',
+      email,
       full_name: `${clerkUser?.firstName ?? ''} ${clerkUser?.lastName ?? ''}`.trim(),
+      plan: email === OWNER_EMAIL ? 'enterprise' : 'hobby',
     })
+  } else if (existing.email === OWNER_EMAIL && existing.plan !== 'enterprise') {
+    // Oprava plánu vlastníka při každém načtení dokud není v DB správně
+    await db.from('users').update({ plan: 'enterprise' }).eq('id', userId)
   }
 
   return (

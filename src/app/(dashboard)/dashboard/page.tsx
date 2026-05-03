@@ -12,16 +12,16 @@ export default async function DashboardPage() {
   const { userId } = await auth()
   const db = createServiceClient()
 
-  const [{ data: user }, { data: chatbots }] = await Promise.all([
+  const [{ data: user }, { data: chatbots }, usage] = await Promise.all([
     db.from('users').select('*').eq('id', userId!).single(),
     db.from('chatbots').select('*').eq('user_id', userId!).order('created_at', { ascending: false }),
+    getCurrentUsage(userId!),
   ])
 
   const typedUser = user as User | null
   const typedBots = (chatbots ?? []) as Chatbot[]
   const plan = typedUser?.plan ?? 'hobby'
   const limits = PLAN_LIMITS[plan]
-  const usage = await getCurrentUsage(userId!)
   const planLabel = plan.charAt(0).toUpperCase() + plan.slice(1)
   const msgLeft = limits.messages_per_month === Infinity
     ? null
