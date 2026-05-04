@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Save, Trash2, Plus, X, Upload, Loader2 } from 'lucide-react'
+import { Save, Trash2, Plus, X, Upload, Loader2, Wand2, Check } from 'lucide-react'
 import { MODEL_LABELS } from '@/lib/plans'
 import { PRESET_AVATARS, getPresetAvatar, isImageUrl } from '@/lib/bot-avatars'
 import type { Chatbot, ChatModel, Plan } from '@/types'
@@ -30,6 +30,11 @@ export function ChatbotForm({ chatbot, plan }: ChatbotFormProps) {
   const [uploading, setUploading] = useState(false)
   const [uploadError, setUploadError] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [styleUrl, setStyleUrl] = useState('')
+  const [analyzing, setAnalyzing] = useState(false)
+  const [analyzeError, setAnalyzeError] = useState('')
+  const [candidates, setCandidates] = useState<string[]>([])
+  const [applied, setApplied] = useState(false)
 
   const [form, setForm] = useState({
     name: chatbot?.name ?? '',
@@ -270,10 +275,86 @@ export function ChatbotForm({ chatbot, plan }: ChatbotFormProps) {
             <input
               type="color"
               value={form.theme_color}
-              onChange={e => set('theme_color', e.target.value)}
+              onChange={e => { set('theme_color', e.target.value); setCandidates([]); setApplied(false) }}
               className="h-9 w-16 rounded-lg border border-paper_border cursor-pointer p-0.5 bg-white"
             />
             <span className="text-sm text-muted font-mono">{form.theme_color}</span>
+          </div>
+
+          {/* Styl podle stránky */}
+          <div className="mt-4 p-4 rounded-lg border border-paper_border bg-bone/50">
+            <p className="text-xs font-medium text-ink mb-1 flex items-center gap-1.5">
+              <Wand2 className="h-3.5 w-3.5" />
+              Styl podle stránky
+            </p>
+            <p className="text-xs text-muted mb-3">Zadej URL webu — automaticky vytáhneme brand barvu.</p>
+            <div className="flex gap-2">
+              <input
+                type="url"
+                placeholder="https://vas-web.cz"
+                value={styleUrl}
+                onChange={e => { setStyleUrl(e.target.value); setAnalyzeError(''); setCandidates([]); setApplied(false) }}
+                className="flex-1 px-3 py-1.5 text-sm rounded-md border border-paper_border bg-white focus:outline-none focus:border-ink/40 placeholder:text-muted/60"
+              />
+              <button
+                type="button"
+                disabled={analyzing || !styleUrl.trim()}
+                onClick={async () => {
+                  setAnalyzing(true)
+                  setAnalyzeError('')
+                  setCandidates([])
+                  setApplied(false)
+                  try {
+                    const res = await fetch(`/api/chatbots/${chatbot?.id}/analyze-style`, {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ url: styleUrl.trim() }),
+                    })
+                    const data = await res.json()
+                    if (!res.ok) { setAnalyzeError(data.error ?? 'Chyba'); return }
+                    set('theme_color', data.theme_color)
+                    setCandidates(data.candidates ?? [])
+                    setApplied(true)
+                  } catch {
+                    setAnalyzeError('Nepodařilo se načíst stránku')
+                  } finally {
+                    setAnalyzing(false)
+                  }
+                }}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md bg-ink text-bone disabled:opacity-40 transition-opacity whitespace-nowrap"
+              >
+                {analyzing ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Wand2 className="h-3.5 w-3.5" />}
+                Analyzovat
+              </button>
+            </div>
+
+            {analyzeError && (
+              <p className="text-xs text-red-500 mt-2">{analyzeError}</p>
+            )}
+
+            {applied && candidates.length > 0 && (
+              <div className="mt-3">
+                <p className="text-xs text-muted mb-2 flex items-center gap-1">
+                  <Check className="h-3 w-3 text-green-600" />
+                  Aplikováno — vyber jinou variantu:
+                </p>
+                <div className="flex gap-2 flex-wrap">
+                  {candidates.map(hex => (
+                    <button
+                      key={hex}
+                      type="button"
+                      title={hex}
+                      onClick={() => set('theme_color', hex)}
+                      className="w-7 h-7 rounded-md border-2 transition-all hover:scale-110"
+                      style={{
+                        background: hex,
+                        borderColor: form.theme_color === hex ? '#0c0c0e' : 'transparent',
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
