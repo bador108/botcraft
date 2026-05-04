@@ -305,10 +305,12 @@ export function ChatbotForm({ chatbot, plan }: ChatbotFormProps) {
                   setCandidates([])
                   setApplied(false)
                   try {
+                    let targetUrl = styleUrl.trim()
+                    if (!/^https?:\/\//i.test(targetUrl)) targetUrl = 'https://' + targetUrl
                     const res = await fetch(`/api/chatbots/${chatbot?.id}/analyze-style`, {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ url: styleUrl.trim() }),
+                      body: JSON.stringify({ url: targetUrl }),
                     })
                     const data = await res.json()
                     if (!res.ok) { setAnalyzeError(data.error ?? 'Chyba'); return }
