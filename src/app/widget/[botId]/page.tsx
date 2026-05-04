@@ -11,7 +11,7 @@ export default async function WidgetPage({ params, searchParams }: {
   const db = createServiceClient()
   const { data: bot } = await db
     .from('chatbots')
-    .select('id, name, avatar, theme_color, welcome_message, is_active')
+    .select('id, name, avatar, theme_color, welcome_message, suggested_questions, is_active')
     .eq('id', params.botId)
     .eq('is_active', true)
     .single()
