@@ -93,9 +93,12 @@ export async function POST(req: Request) {
     try {
       res = await fetch(parsed.toString(), {
         headers: {
-          'User-Agent': 'Mozilla/5.0 (compatible; BotCraft/1.0)',
-          Accept: 'text/html',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+          'Accept-Language': 'cs-CZ,cs;q=0.9,en;q=0.8',
+          'Cache-Control': 'no-cache',
         },
+        redirect: 'follow',
         signal: controller.signal,
       })
     } finally {
@@ -103,7 +106,10 @@ export async function POST(req: Request) {
     }
 
     if (!res.ok) {
-      return NextResponse.json({ error: `Stránka vrátila ${res.status}` }, { status: 422 })
+      const msg = res.status === 403
+        ? 'Stránka blokuje automatické čtení. Zkus zadat barvu ručně.'
+        : `Stránka vrátila ${res.status}`
+      return NextResponse.json({ error: msg }, { status: 422 })
     }
 
     const contentType = res.headers.get('content-type') ?? ''
