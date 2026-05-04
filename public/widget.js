@@ -30,8 +30,8 @@
   btn.style.cssText =
     'width:56px;height:56px;border-radius:50%;border:none;cursor:pointer;' +
     'display:flex;align-items:center;justify-content:center;' +
-    'box-shadow:0 4px 16px rgba(0,0,0,0.18);transition:transform 0.2s ease,box-shadow 0.2s ease,background 0.3s ease;' +
-    'background:#D4500A;outline:none;';
+    'box-shadow:0 4px 16px rgba(0,0,0,0.18);transition:transform 0.2s ease,box-shadow 0.2s ease,background 0.3s ease,opacity 0.2s ease;' +
+    'background:#888;outline:none;opacity:0;';
 
   var chatSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>';
   var closeSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
@@ -42,11 +42,13 @@
   fetch(appUrl + '/api/public/chatbots/' + botId)
     .then(function (r) { return r.ok ? r.json() : null; })
     .then(function (data) {
-      if (data && data.theme_color) {
-        btn.style.background = data.theme_color;
-      }
+      btn.style.background = (data && data.theme_color) ? data.theme_color : '#0c0c0e';
+      btn.style.opacity = '1';
     })
-    .catch(function () {});
+    .catch(function () {
+      btn.style.background = '#0c0c0e';
+      btn.style.opacity = '1';
+    });
 
   btn.addEventListener('mouseenter', function () {
     btn.style.transform = 'scale(1.08)';

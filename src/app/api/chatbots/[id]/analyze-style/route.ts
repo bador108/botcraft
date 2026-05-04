@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
-import { createServiceClient } from '@/lib/supabase'
 
 function toHex(color: string): string | null {
   color = color.trim()
@@ -61,14 +60,9 @@ function extractColors(html: string): { meta: string | null; css: string[] } {
   return { meta, css }
 }
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request) {
   const { userId } = await auth()
   if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-
-  const db = createServiceClient()
-  const { data: bot } = await db
-    .from('chatbots').select('id').eq('id', params.id).eq('user_id', userId).single()
-  if (!bot) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
   let body: { url?: string }
   try {
