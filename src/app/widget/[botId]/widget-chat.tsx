@@ -21,27 +21,18 @@ interface Message {
 
 function AvatarDisplay({ avatar, size }: { avatar: string; size: number }) {
   const preset = getPresetAvatar(avatar)
-  if (preset) {
-    return (
-      <div style={{ width: size, height: size, flexShrink: 0 }}>
-        {preset.svg}
-      </div>
-    )
-  }
+  if (preset) return <div style={{ width: size, height: size, flexShrink: 0 }}>{preset.svg}</div>
   if (isImageUrl(avatar)) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
-      <img
-        src={avatar}
-        alt="bot"
-        style={{ width: size, height: size, borderRadius: '4px', objectFit: 'cover', flexShrink: 0 }}
-      />
+      <img src={avatar} alt="bot" style={{ width: size, height: size, borderRadius: 6, objectFit: 'cover', flexShrink: 0 }} />
     )
   }
   return <span style={{ fontSize: size * 0.7, lineHeight: 1, flexShrink: 0 }}>{avatar}</span>
 }
 
 export function WidgetChat({ bot, domain }: { bot: BotConfig; domain?: string }) {
+  const theme = bot.theme_color || '#0c0c0e'
   const [messages, setMessages] = useState<Message[]>([
     { role: 'assistant', content: bot.welcome_message },
   ])
@@ -50,10 +41,9 @@ export function WidgetChat({ bot, domain }: { bot: BotConfig; domain?: string })
   const bottomRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  // Pošli barvu tématu rodiči pro chat bubble tlačítko
   useEffect(() => {
-    window.parent.postMessage({ type: 'botcraft-theme', color: bot.theme_color || '#D4502A' }, '*')
-  }, [bot.theme_color])
+    window.parent.postMessage({ type: 'botcraft-theme', color: theme }, '*')
+  }, [theme])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -117,59 +107,62 @@ export function WidgetChat({ bot, domain }: { bot: BotConfig; domain?: string })
   }
 
   const showBadge = bot.show_badge !== false
-  // Navrhované otázky zobrazíme po každé odpovědi asistenta (jako follow-up shortcuts)
   const lastMsg = messages[messages.length - 1]
-  const showSuggestions = (bot.suggested_questions?.length ?? 0) > 0 && !loading && lastMsg?.role === 'assistant' && !!lastMsg.content
+  const showSuggestions =
+    (bot.suggested_questions?.length ?? 0) > 0 &&
+    !loading &&
+    lastMsg?.role === 'assistant' &&
+    !!lastMsg.content
 
   return (
-    <div className="flex flex-col h-dvh font-sans text-sm" style={{ background: '#F5F1EA', color: '#1A1814' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100dvh', background: '#ffffff', color: '#0c0c0e', fontFamily: "'DM Sans', -apple-system, system-ui, sans-serif", fontSize: 14 }}>
 
       {/* Header */}
-      <div
-        className="flex items-center gap-3 px-4 py-3 shrink-0 border-b"
-        style={{ borderColor: '#D9D0C0', background: '#EDE7DC' }}
-      >
-        <AvatarDisplay avatar={bot.avatar} size={28} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', borderBottom: '1px solid #ececef', background: '#ffffff', flexShrink: 0 }}>
+        <div style={{
+          width: 32, height: 32, borderRadius: 8, background: theme,
+          display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, overflow: 'hidden',
+        }}>
+          <AvatarDisplay avatar={bot.avatar} size={22} />
+        </div>
         <div>
-          <p className="font-semibold text-sm leading-tight" style={{ color: '#1A1814' }}>
-            {bot.name}
+          <p style={{ fontWeight: 600, fontSize: 13, lineHeight: 1.3, color: '#0c0c0e', margin: 0 }}>{bot.name}</p>
+          <p style={{ fontSize: 11, color: '#6b7280', margin: 0, display: 'flex', alignItems: 'center', gap: 4 }}>
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#16a34a', display: 'inline-block' }} />
+            Online
           </p>
-          <p className="text-[11px]" style={{ color: '#6B6359' }}>Online</p>
         </div>
       </div>
 
       {/* Zprávy */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
+      <div style={{ flex: 1, overflowY: 'auto', padding: '16px', display: 'flex', flexDirection: 'column', gap: 12 }}>
         {messages.map((msg, i) => (
-          <div
-            key={i}
-            className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} gap-2`}
-          >
+          <div key={i} style={{ display: 'flex', justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start', gap: 8 }}>
             {msg.role === 'assistant' && (
-              <div
-                className="h-7 w-7 flex items-center justify-center shrink-0 mt-0.5 overflow-hidden border"
-                style={{ background: '#EDE7DC', borderColor: '#D9D0C0', borderRadius: '6px' }}
-              >
-                <AvatarDisplay avatar={bot.avatar} size={24} />
+              <div style={{
+                width: 26, height: 26, borderRadius: 6, background: theme,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2, overflow: 'hidden',
+              }}>
+                <AvatarDisplay avatar={bot.avatar} size={18} />
               </div>
             )}
-            <div
-              className="max-w-[78%] px-3 py-2 text-sm leading-relaxed whitespace-pre-wrap break-words"
-              style={{
-                borderRadius: '2px',
-                ...(msg.role === 'user'
-                  ? { background: bot.theme_color || '#D4502A', color: '#F5F1EA' }
-                  : { background: '#EDE7DC', color: '#1A1814', border: '1px solid #D9D0C0' }),
-              }}
-            >
+            <div style={{
+              maxWidth: '78%', padding: '10px 13px', fontSize: 13, lineHeight: 1.6,
+              whiteSpace: 'pre-wrap', wordBreak: 'break-word', borderRadius: 12,
+              ...(msg.role === 'user'
+                ? { background: theme, color: '#ffffff', borderBottomRightRadius: 4 }
+                : { background: '#f5f5f4', color: '#0c0c0e', borderBottomLeftRadius: 4 }
+              ),
+            }}>
               {msg.content || (loading && i === messages.length - 1 ? (
-                <span className="flex items-center gap-1">
+                <span style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
                   {[0, 1, 2].map(j => (
-                    <span
-                      key={j}
-                      className="w-1.5 h-1.5 rounded-full animate-bounce"
-                      style={{ background: '#6B6359', animationDelay: `${j * 150}ms` }}
-                    />
+                    <span key={j} style={{
+                      width: 6, height: 6, borderRadius: '50%', background: '#9ca3af',
+                      display: 'inline-block',
+                      animation: 'bounce 1.2s infinite',
+                      animationDelay: `${j * 0.15}s`,
+                    }} />
                   ))}
                 </span>
               ) : '')}
@@ -177,22 +170,20 @@ export function WidgetChat({ bot, domain }: { bot: BotConfig; domain?: string })
           </div>
         ))}
 
-        {/* Navrhované otázky — po každé odpovědi asistenta */}
+        {/* Suggested questions */}
         {showSuggestions && (
-          <div className="flex flex-wrap gap-2 pl-9">
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, paddingLeft: 34 }}>
             {bot.suggested_questions!.map((q, i) => (
               <button
                 key={i}
                 onClick={() => sendText(q)}
-                className="text-xs px-3 py-1.5 border transition-colors hover:bg-[#EDE7DC]"
                 style={{
-                  borderRadius: '2px',
-                  borderColor: bot.theme_color || '#D4502A',
-                  background: '#F5F1EA',
-                  color: '#1A1814',
-                  textAlign: 'left',
-                  opacity: 0.85,
+                  fontSize: 12, padding: '5px 10px', borderRadius: 20,
+                  border: `1px solid #ececef`, background: '#ffffff', color: '#0c0c0e',
+                  cursor: 'pointer', textAlign: 'left', transition: 'border-color 0.15s, background 0.15s',
                 }}
+                onMouseEnter={e => { (e.target as HTMLElement).style.borderColor = theme; (e.target as HTMLElement).style.background = '#fafafa' }}
+                onMouseLeave={e => { (e.target as HTMLElement).style.borderColor = '#ececef'; (e.target as HTMLElement).style.background = '#ffffff' }}
               >
                 {q}
               </button>
@@ -204,53 +195,66 @@ export function WidgetChat({ bot, domain }: { bot: BotConfig; domain?: string })
       </div>
 
       {/* Input */}
-      <div
-        className="px-3 py-3 shrink-0 border-t"
-        style={{ borderColor: '#D9D0C0', background: '#EDE7DC' }}
-      >
-        <div className="flex gap-2 items-center">
+      <div style={{ padding: '12px', borderTop: '1px solid #ececef', background: '#ffffff', flexShrink: 0 }}>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           <input
             ref={inputRef}
             type="text"
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && !e.shiftKey && send()}
-            placeholder="Napiš zprávu..."
+            placeholder="Napiš zprávu…"
             disabled={loading}
             style={{
-              borderRadius: '2px',
-              background: '#F5F1EA',
-              border: '1px solid #D9D0C0',
-              color: '#1A1814',
+              flex: 1, padding: '9px 14px', borderRadius: 24, fontSize: 13,
+              border: '1px solid #e5e7eb', background: '#f9fafb', color: '#0c0c0e',
+              outline: 'none', transition: 'border-color 0.15s',
             }}
-            className="flex-1 px-3 py-2 text-sm focus:outline-none focus:border-[#1A1814] transition-colors placeholder:text-[#6B6359] disabled:opacity-50"
+            onFocus={e => (e.target.style.borderColor = '#9ca3af')}
+            onBlur={e => (e.target.style.borderColor = '#e5e7eb')}
           />
           <button
             onClick={send}
             disabled={!input.trim() || loading}
-            style={{ background: bot.theme_color || '#D4502A', borderRadius: '2px', width: '36px', height: '36px' }}
-            className="flex items-center justify-center transition-opacity disabled:opacity-40 shrink-0 hover:opacity-90"
+            style={{
+              width: 36, height: 36, borderRadius: '50%', border: 'none',
+              background: theme, cursor: 'pointer', flexShrink: 0,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              opacity: (!input.trim() || loading) ? 0.4 : 1,
+              transition: 'opacity 0.15s',
+            }}
           >
             {loading
-              ? <Loader2 className="h-4 w-4 animate-spin" style={{ color: '#F5F1EA' }} />
-              : <Send className="h-4 w-4" style={{ color: '#F5F1EA' }} />
+              ? <Loader2 size={15} color="#ffffff" style={{ animation: 'spin 1s linear infinite' }} />
+              : <Send size={15} color="#ffffff" />
             }
           </button>
         </div>
 
-        {/* Badge — skrytý pro Maker+ plány (show_badge === false) */}
         {showBadge && (
           <a
             href="https://botcraft.vercel.app"
             target="_blank"
             rel="noopener noreferrer"
-            className="block text-center mt-2 font-mono text-[10px] uppercase tracking-wider hover:opacity-70 transition-opacity"
-            style={{ color: '#6B6359', fontFamily: 'monospace' }}
+            style={{ display: 'block', textAlign: 'center', marginTop: 8, fontSize: 10, color: '#9ca3af', textDecoration: 'none', letterSpacing: '0.05em' }}
           >
             Powered by BotCraft
           </a>
         )}
       </div>
+
+      <style>{`
+        @keyframes bounce {
+          0%, 80%, 100% { transform: translateY(0); }
+          40% { transform: translateY(-5px); }
+        }
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        * { box-sizing: border-box; }
+        body { margin: 0; }
+      `}</style>
     </div>
   )
 }
