@@ -28,5 +28,17 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { user_id, ...botConfig } = data
-  return NextResponse.json({ ...botConfig, show_badge })
+  return NextResponse.json({ ...botConfig, show_badge }, {
+    headers: { 'Access-Control-Allow-Origin': '*' },
+  })
+}
+
+export async function OPTIONS() {
+  return new Response(null, {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  })
 }
